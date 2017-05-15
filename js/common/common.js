@@ -168,6 +168,7 @@ function sendActcode(action) {
  */
 function submitPost(action) {
     var submitAction = action + "index.php/mypost/submit";
+    $("#id-hidden-createdat").val(new Date().getTime());
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),

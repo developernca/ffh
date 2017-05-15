@@ -61,6 +61,11 @@ echo form_input([
     'value' => 'Submit',
     'onclick' => 'submitPost(\'' . base_url() . '\');'
 ]);
+echo form_input([
+    'type' => 'hidden',
+    'id' => 'id-hidden-createdat',
+    'name' => Constant::NAME_HIDDEN_POST_CREATEDAT
+]);
 echo '</form>'; // end create post form
 echo '</div>'; // end create post container
 // =========== begin post error p tag==================

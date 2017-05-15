@@ -3,7 +3,7 @@
 class MyPost extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(['html', 'form'], ['form_validation', 'constant', 'session'], ['account']);
+        parent::__construct(['html', 'form'], ['form_validation', 'constant', 'session'], ['account', 'post']);
     }
 
     // @override
@@ -47,10 +47,7 @@ class MyPost extends MY_Controller {
                 'msg' => strip_tags($validation_err_msg)
             ]));
         } else { // No errors, all clear.
-            exit(json_encode([
-                'flg' => FALSE,
-                'msg' => 'OK'
-            ]));
+            $this->post->insert_post($this->input->post());
         }
     }
 
