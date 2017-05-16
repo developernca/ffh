@@ -20,7 +20,7 @@ class Account extends CI_Model {
             $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ID => $usr_id]);
             $result = $query->result();
         } while (!empty($result));
-        mkdir(FCPATH . DIRECTORY_SEPARATOR . $usr_id);
+        mkdir(FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $usr_id);
 
         // generate activation code
         do {

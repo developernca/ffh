@@ -173,7 +173,14 @@ function submitPost(action) {
             submitAction,
             $("#id-form-createpost").serializeArray(),
             function (response) {
-                console.log(response);
+                var resp_arr = JSON.parse(response);
+                if (resp_arr['flg'] && resp_arr.hasOwnProperty('action')) {// session time out
+                    $(location).attr("href", action);
+                } else if (resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // clear
+                    
+                } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // error occured
+
+                }
             });
 }
 

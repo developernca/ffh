@@ -1,9 +1,10 @@
 <?php
 
 echo '<br/>';
-echo '<div id = "id-div-cpcontainer">'; // begin create post container
-echo '<form id = "id-form-createpost">'; // begin create post form
-
+// =========== begin create post container ============
+echo '<div id = "id-div-cpcontainer" class = "cl-div-postcontainer">';
+// =========== end create post form ===================
+echo '<form id = "id-form-createpost">';
 echo form_input([
     'type' => 'text',
     'id' => 'id-text-posttitle',
@@ -66,9 +67,29 @@ echo form_input([
     'id' => 'id-hidden-createdat',
     'name' => Constant::NAME_HIDDEN_POST_CREATEDAT
 ]);
-echo '</form>'; // end create post form
-echo '</div>'; // end create post container
-// =========== begin post error p tag==================
+echo '</form>';
+// =========== end create post form ===================
+// =========== begin post error p tag =================
 echo '<p id="id-p-createposterr" class="cl-p-posterr"></p>';
 // =========== end post error p tag==================
+echo '</div>';
+// =========== end create post container ==================
+//
+//
+//
+//
+//
+//
+//
+//
+// =========== begin current users post lit ================
+$post_list = ${Constant::VDN_CURRENTUSER_POST_LISTS};
+if (!is_null($post_list)) {
+    foreach ($post_list as $column => $row) {
+        echo '<div class="cl-div-postcontainer">';
+        echo '<p>' . $row[Constant::TABLE_POSTS_COLUMN_POST_TITLE] . '</p>';
+        echo '<p>' . $row[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] . '</p>';
+        echo '</div>';
+    }
+}
 

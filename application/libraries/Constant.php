@@ -80,11 +80,12 @@ class Constant {
     const TABLE_POSTS_COLUMN_ACCOUNT_ID = 'account_id';
     // =============== VIEW DATA KEY NAME ===================
     const VDN_POST_TYPES_OPTIONS = 'vdn_post_types_options';
+    const VDN_CURRENTUSER_POST_LISTS = 'vdn_current_user_post_lists';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array
     const POST_TYPE_OPTIONS_ARR = [
-        'IT/Computing',
+        'IT_Computing',
         'Politic',
         'Business',
         'Other',

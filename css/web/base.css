@@ -113,7 +113,7 @@ body{
 }
 
 /*cpcontainer - create post container*/
-#id-div-cpcontainer{
+.cl-div-postcontainer{
     display: inline-block;
     background: #C0C0C0;
     border-radius: 10px;

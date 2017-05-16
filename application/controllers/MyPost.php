@@ -3,7 +3,7 @@
 class MyPost extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(['html', 'form'], ['form_validation', 'constant', 'session'], ['account', 'post']);
+        parent::__construct(['html', 'form', 'file'], ['form_validation', 'constant', 'session', 'keygenerator'], ['account', 'post']);
     }
 
     // @override
@@ -30,8 +30,9 @@ class MyPost extends MY_Controller {
     public function index() {
         $this->authenticate();
         $post_type = Constant::POST_TYPE_OPTIONS_ARR;
+        $currentuser_post_list = $this->post->get_post_by_user($this->session->userdata(Constant::SESSION_USSID));
         sort($post_type);
-        $this->load_view(Constant::MY_POST_VIEW, [Constant::VDN_POST_TYPES_OPTIONS => $post_type]);
+        $this->load_view(Constant::MY_POST_VIEW, [Constant::VDN_POST_TYPES_OPTIONS => $post_type, Constant::VDN_CURRENTUSER_POST_LISTS => $currentuser_post_list]);
     }
 
     /**
@@ -46,8 +47,19 @@ class MyPost extends MY_Controller {
                 'flg' => FALSE,
                 'msg' => strip_tags($validation_err_msg)
             ]));
-        } else { // No errors, all clear.
-            $this->post->insert_post($this->input->post());
+        }
+        // get currently inserted post
+        $inserted_post = $this->post->insert_post($this->input->post());
+        if (!is_null($inserted_post)) {
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $inserted_post
+            ]));
+        } else {
+            exit(json_encode([
+                'flg' => FALSE,
+                'msg' => 'Unexpectable error occured.'
+            ]));
         }
     }
 
