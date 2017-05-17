@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Model class for posts table.
+ * 
+ * @author Nyein Chan Aung<developernca@gmail.com>
+ */
 class Post extends CI_Model {
 
     private $base_path;
@@ -11,6 +16,12 @@ class Post extends CI_Model {
         $this->base_path = FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $this->posted_user . DIRECTORY_SEPARATOR; // ffh/usr/usr_id/
     }
 
+    /**
+     * Insert new data to posts table.
+     * 
+     * @param array $data user submitted form data
+     * @return array created data as array or null on failure
+     */
     public function insert_post(array $data) {
         // generate id
         $post_id = null;
@@ -40,12 +51,13 @@ class Post extends CI_Model {
             Constant::TABLE_POSTS_COLUMN_REMARK => (!empty($data[Constant::NAME_TEXT_POST_REMARK])) ? $data[Constant::NAME_TEXT_POST_REMARK] : NULL,
             Constant::TABLE_POSTS_COLUMN_TYPE => $type_arr[$data[Constant::NAME_SELECT_POST_TYPE]],
             Constant::TABLE_POSTS_COLUMN_POSTED_TIME => $data[Constant::NAME_HIDDEN_POST_CREATEDAT],
+            Constant::TABLE_POSTS_COLUMN_UPDATED_TIME => $data[Constant::NAME_HIDDEN_POST_CREATEDAT],
             Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID => $this->posted_user
         ];
         $insert_success = $this->db->insert(Constant::TABLE_POSTS, $values);
         unset($type_arr);
         if ($insert_success) {
-            $values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(file_get_contents($values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME])); // unset post_text_file_name and set file content
+            $values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br(file_get_contents($values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]))); // unset post_text_file_name and set file content
             return $values;
         } else {
             return NULL;
@@ -58,21 +70,19 @@ class Post extends CI_Model {
      * @return mixed return result set as array or null in case of no post
      */
     public function get_post_by_user($id) {
-        $query = $this->db->get_where(Constant::TABLE_POSTS, [Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID => $id]);
+        $this->db->select();
+        $this->db->from(Constant::TABLE_POSTS);
+        $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $id); // where -> get post by id
+        $this->db->order_by(Constant::TABLE_POSTS_COLUMN_UPDATED_TIME, 'DESC');
+        $query = $this->db->get();
         $result = $query->result_array();
         if (is_null($result) || empty($result)) {
             return NULL;
         } else {
             $resultLength = count($result);
             for ($col = 0; $col < $resultLength; $col++) {
-                // get files content and use PHP_EOL
-                $file_handle = fopen($result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME], 'r+');
-                $content = '';
-                while (!feof($file_handle)) {
-                    $content .= fgets($file_handle);
-                    $content .= '<br />';
-                }
-                $result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link($content); // unset post_text_file_name and set file content
+                $file_contents = nl2br(file_get_contents($result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]));
+                $result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link($file_contents); // unset post_text_file_name and set file content
             }
             return $result;
         }

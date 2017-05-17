@@ -173,15 +173,52 @@ function submitPost(action) {
             submitAction,
             $("#id-form-createpost").serializeArray(),
             function (response) {
+                console.log(response);
                 var resp_arr = JSON.parse(response);
-                if (resp_arr['flg'] && resp_arr.hasOwnProperty('action')) {// session time out
+                if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
-                } else if (resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // clear
-                    
+                } else if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // clear
+                    // post data
+                    var pdata = resp_arr["msg"];
+                    // create a container div
+                    var pcontainer = $("<div class='cl-div-postcontainer'>");
+                    // create post title p
+                    var ep_title = $("<p class='cl-p-eptitle'>");
+                    ep_title.text(pdata["post_title"] + ' Test');
+                    pcontainer.append(ep_title);
+                    // create post content p
+                    var ep_content = $("<p class='cl-p-epcontent'>");
+                    ep_content.html(pdata["post_text_file_name"]);
+                    pcontainer.append(ep_content);
+                    // create table for contact email, contact phone and remark
+                    var rowCount = 0;
+                    var table = $("<table border='0' cellpadding='4' cellspacing='0'>");
+                    if (pdata["contact_email"] !== null) {
+                        table.append($("<tr><td>Contact Email</td><td><span class='cl-ep-contactemail'>" + pdata["contact_email"] + "</span><td>"));
+                    }
+                    if (pdata["contact_phone"] !== null) {
+                        table.append($("<tr><td>Contact Phone</td><td><span class='cl-ep-contactphone'>" + pdata["contact_phone"] + "</span><td>"));
+                    }
+                    if (pdata["remark"] !== null) {
+                        table.append($("<tr><td>Remark</td><td><span class='cl-ep-remark'>" + pdata["remark"] + "</span><td>"));
+                    }
+                    table.append($("<tr><td>Remark</td><td><span class='cl-ep-remark'>" + pdata["remark"] + "</span><td>"));
+                    pcontainer.append(table);
+                    // edit button
+                    var edt_btn = $("<button class='cl-btn-small cl-btn-epedtbtn' onclick='post_edit_clik(this)';>&#9998;</button>");
+                    var del_btn = $("<button class='cl-btn-small cl-btn-epdelbtn' onclick='post_delete_clik(this);'>&#10007;</button>");
+                    // delete button
+                    pcontainer.append(edt_btn);
+                    pcontainer.append(del_btn);
+                    pcontainer.insertAfter($("#id-div-cpcontainer"));
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // error occured
-
+                    showPostError("#id-p-createposterr", resp_arr['msg']);
                 }
             });
+}
+
+function post_edit_clik(element) {
+    console.log($(element).parent());
 }
 
 /**
@@ -192,8 +229,12 @@ function submitPost(action) {
  * @returns {void}
  */
 function showPostError(id, msg) {
-    $(id).text(msg).fadeIn();
+    console.log(msg);
+    $(id).text("*** " + msg + "***").fadeIn();
+    console.log($(id).text());
     setTimeout(function () {
         $(id).fadeOut();
     }, 3500);
 }
+
+// pcontainer.fadeTo('slow', 0.33);

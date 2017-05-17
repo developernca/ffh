@@ -68,10 +68,10 @@ echo form_input([
     'name' => Constant::NAME_HIDDEN_POST_CREATEDAT
 ]);
 echo '</form>';
-// =========== end create post form ===================
 // =========== begin post error p tag =================
-echo '<p id="id-p-createposterr" class="cl-p-posterr"></p>';
+echo '<p id="id-p-createposterr" class="cl-p-createposterr"></p>';
 // =========== end post error p tag==================
+// =========== end create post form ===================
 echo '</div>';
 // =========== end create post container ==================
 //
@@ -87,8 +87,25 @@ $post_list = ${Constant::VDN_CURRENTUSER_POST_LISTS};
 if (!is_null($post_list)) {
     foreach ($post_list as $column => $row) {
         echo '<div class="cl-div-postcontainer">';
-        echo '<p>' . $row[Constant::TABLE_POSTS_COLUMN_POST_TITLE] . '</p>';
-        echo '<p>' . $row[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] . '</p>';
+        echo '<p class="cl-p-eptitle">' . $row[Constant::TABLE_POSTS_COLUMN_POST_TITLE] . '</p>';
+        echo '<p class="cl-p-epcontent">' . $row[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] . '</p>';
+        if (!is_null($row[Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL])) {
+            $this->table->add_row('Contact Email', '<span class="cl-ep-contactemail">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL] . '</span>');
+        }
+        if (!is_null($row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE])) {
+            $this->table->add_row('Contact Phone', '<span class="cl-ep-contactphone">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE] . '</span>');
+        }
+        if (!is_null($row[Constant::TABLE_POSTS_COLUMN_REMARK])) {
+            $this->table->add_row('Remark', '<span class="cl-ep-remark">' . $row[Constant::TABLE_POSTS_COLUMN_REMARK] . '</span>');
+        }
+        $table = $this->table->generate();
+        if (strcasecmp($table, "Undefined table data") !== 0) {
+            echo $table;
+        }
+        // edit
+        echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="post_edit_clik(this);" />&#9998;</button>';
+        // delete
+        echo '<button class="cl-btn-small cl-btn-epdelbtn" onclick="post_delete_click();" />&#10007;</button>';
         echo '</div>';
     }
 }

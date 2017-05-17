@@ -3,7 +3,7 @@
 class MyPost extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(['html', 'form', 'file'], ['form_validation', 'constant', 'session', 'keygenerator'], ['account', 'post']);
+        parent::__construct(['html', 'form', 'file'], ['form_validation', 'constant', 'session', 'keygenerator', 'table'], ['account', 'post']);
     }
 
     // @override
