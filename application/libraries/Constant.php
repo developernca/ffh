@@ -50,8 +50,8 @@ class Constant {
     const NAME_BTN_SIGNUP_FORM = 'suf_btn';
     // name for hidden field
     const NAME_HIDDEN_SIGNUP_TIME = 'suf_usr_time';
-    const NAME_HIDDEN_POST_CREATEDAT = 'pcf_created_time';
-    const NAME_HIDDEN_POST_UPDATEDAT = 'pcf_updated_time';
+    const NAME_HIDDEN_POST_CREATEDAT = 'pc_time';
+    const NAME_HIDDEN_POST_UPDATEDAT = 'pc_time';
     // name for select field
     const NAME_SELECT_POST_TYPE = 'type';
     // database table and column name

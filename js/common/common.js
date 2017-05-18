@@ -1,7 +1,8 @@
 /**
  * author Nyein Chan Aung<developernca@gmail.com>
  */
-
+var original_container = null;
+var edit_container = null;
 /**
  * Initialize all necessary work when loading complete.
  */
@@ -173,7 +174,6 @@ function submitPost(action) {
             submitAction,
             $("#id-form-createpost").serializeArray(),
             function (response) {
-                console.log(response);
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -211,14 +211,74 @@ function submitPost(action) {
                     pcontainer.append(edt_btn);
                     pcontainer.append(del_btn);
                     pcontainer.insertAfter($("#id-div-cpcontainer"));
-                } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // error occured
+                } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
                     showPostError("#id-p-createposterr", resp_arr['msg']);
                 }
             });
 }
 
 function post_edit_clik(element) {
-    console.log($(element).parent());
+    // If there is an unfinish edit post, replace that post
+    if (edit_container !== null) {
+        $(edit_container).replaceWith($(original_container));
+    }
+    original_container = $(element).parent();
+    edit_container = $("#id-div-cpcontainer").clone();
+    // replace and add all necessary data
+    $(original_container).replaceWith($(edit_container));
+    $(edit_container).attr("id", "id-div-epcontainer");
+    $(edit_container).find("#id-text-posttitle").val($(original_container).find(".cl-p-eptitle").text());
+    $(edit_container).find("#id-textarea-postcontent").val($(original_container).find(".cl-p-epcontent").text());
+    $(edit_container).find("#id-text-contactmail").val($(original_container).find(".cl-span-epcontactemail").text());
+    $(edit_container).find("#id-text-contactphone").val($(original_container).find(".cl-span-epcontactphone").text());
+    $(edit_container).find("#id-text-remark").val($(original_container).find(".cl-span-epremark").text());
+    var edit_btn = $(edit_container).find("#id-btn-submitpost");
+    $(edit_btn).val("Edit");// Change button test
+    var edit_btn_funcname = $(edit_btn).attr("onclick");// get onclick event function name
+    edit_btn_funcname = edit_btn_funcname.toString().replace("submitPost", "submitEditPost");// change function name
+    $(edit_btn)
+            .attr("id", "id-btn-submit-edited-post")
+            .attr("onclick", edit_btn_funcname);// set function name
+    var form = $(edit_container).find("form");
+    $(form).attr("id", "id-form-editpost");
+    $(form).append($("<input type='button'>")
+            .attr("value", "Cancel")
+            .attr("class", "cl-btn-medium cl-common-hover")
+            .attr("onclick", "editCancel();"));
+    // hidden fields
+    $(edit_container).find("#id-hidden-createdat").attr("id", "id-hidden-updatedat");
+    $(form).append($("<input type='hidden'>").attr("value", ($(original_container).find(".cl-span-epid").text())));
+    // change error p tag id 
+    $(edit_container).find("#id-p-createposterr").attr("id", "id-p-editposterr");
+}
+
+function submitEditPost(action) {
+    var editAction = action + "index.php/mypost/edit";
+    $("#id-hidden-updatedat").val(new Date().getTime());
+    $.post(
+            editAction,
+            $("#id-form-editpost").serializeArray(),
+            function (response) {
+                var resp_arr = JSON.parse(response);
+                if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
+                    $(location).attr("href", action);
+                } else if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // clear
+                    console.log(response);
+                } else if (!resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // validation error occured
+                    showPostError("#id-p-editposterr", resp_arr["msg"]);
+                }
+            });
+}
+
+/**
+ * Cancel edit process.
+ * 
+ * @returns {void}
+ */
+function editCancel() {
+    $(edit_container).replaceWith($(original_container));
+    original_container = null;
+    edit_container = null;
 }
 
 /**

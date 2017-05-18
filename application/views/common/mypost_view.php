@@ -57,7 +57,7 @@ echo form_dropdown([
 echo '<br/>';
 echo form_input([
     'type' => 'button',
-    'id' => 'id-text-remark',
+    'id' => 'id-btn-submitpost',
     'class' => 'cl-btn-medium cl-common-hover',
     'value' => 'Submit',
     'onclick' => 'submitPost(\'' . base_url() . '\');'
@@ -90,18 +90,20 @@ if (!is_null($post_list)) {
         echo '<p class="cl-p-eptitle">' . $row[Constant::TABLE_POSTS_COLUMN_POST_TITLE] . '</p>';
         echo '<p class="cl-p-epcontent">' . $row[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] . '</p>';
         if (!is_null($row[Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL])) {
-            $this->table->add_row('Contact Email', '<span class="cl-ep-contactemail">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL] . '</span>');
+            $this->table->add_row('Contact Email', '<span class="cl-span-epcontactemail">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL] . '</span>');
         }
         if (!is_null($row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE])) {
-            $this->table->add_row('Contact Phone', '<span class="cl-ep-contactphone">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE] . '</span>');
+            $this->table->add_row('Contact Phone', '<span class="cl-span-epcontactphone">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE] . '</span>');
         }
         if (!is_null($row[Constant::TABLE_POSTS_COLUMN_REMARK])) {
-            $this->table->add_row('Remark', '<span class="cl-ep-remark">' . $row[Constant::TABLE_POSTS_COLUMN_REMARK] . '</span>');
+            $this->table->add_row('Remark', '<span class="cl-span-epremark">' . $row[Constant::TABLE_POSTS_COLUMN_REMARK] . '</span>');
         }
         $table = $this->table->generate();
         if (strcasecmp($table, "Undefined table data") !== 0) {
             echo $table;
         }
+        // post id
+        echo '<span class="cl-span-epid" style="display:none;">' . $row[Constant::TABLE_POSTS_COLUMN_ID] . '</span>';
         // edit
         echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="post_edit_clik(this);" />&#9998;</button>';
         // delete

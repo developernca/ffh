@@ -63,6 +63,39 @@ class MyPost extends MY_Controller {
         }
     }
 
+    /**
+     * When user edit a post, validate post and if there is no input error, update in database,
+     * otherwise show error to user.
+     * 
+     */
+    public function edit() {
+        $this->authenticate();
+        $validation_err_msg = $this->validate_post();
+        if (!is_null($validation_err_msg)) {// Errors
+            exit(json_encode([
+                'flg' => FALSE,
+                'msg' => strip_tags($validation_err_msg)
+            ]));
+        }
+        exit(json_encode([
+            'flg' => TRUE,
+            'msg' => $this->input->post()
+        ]));
+        // get currently updated post
+        // $inserted_post = $this->post->insert_post($this->input->post());
+//        if (!is_null($inserted_post)) {
+//            exit(json_encode([
+//                'flg' => TRUE,
+//                'msg' => $inserted_post
+//            ]));
+//        } else {
+//            exit(json_encode([
+//                'flg' => FALSE,
+//                'msg' => 'Unexpectable error occured.'
+//            ]));
+//        }
+    }
+
     private function validate_post() {
         // Title [cannot be blank]
         $this->form_validation->set_rules(Constant::NAME_TEXT_POST_TITLE, '', 'required|max_length[500]', ['required' => 'Title is required. Please enter title.', 'max_length' => 'Title cannot have more than 500 characters.']);
