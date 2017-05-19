@@ -57,15 +57,36 @@ class Post extends CI_Model {
         $insert_success = $this->db->insert(Constant::TABLE_POSTS, $values);
         unset($type_arr);
         if ($insert_success) {
-            $values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br(file_get_contents($values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]))); // unset post_text_file_name and set file content
+            $values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br(file_get_contents($values[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME])), 'url', TRUE); // unset post_text_file_name and set file content
             return $values;
         } else {
             return NULL;
         }
     }
 
+    /**
+     * Update existing data in posts table.
+     * Update file contents of post.
+     * 
+     * @param array $data user submitted form data
+     */
     public function update_post(array $data) {
-        
+        // update file contents [write file content to existing files]
+        $this->db->select(Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME);
+        $path = $this->db->get_where(Constant::TABLE_POSTS, [Constant::TABLE_POSTS_COLUMN_ID => $data[Constant::NAME_HIDDEN_POST_ID]]);
+        write_file($path, $data[Constant::NAME_TEXT_POST_CONTENT]);
+        $data[Constant::NAME_TEXT_POST_CONTENT] = nl2br(auto_link($data[Constant::NAME_TEXT_POST_CONTENT], 'url'));
+        // update in database
+        $this->db->where(Constant::TABLE_POSTS_COLUMN_ID, $data[Constant::NAME_HIDDEN]);
+        $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $this->posted_user);
+        $result = $this->db->update(Constant::TABLE_POSTS, [
+            Constant::TABLE_POSTS_COLUMN_POST_TITLE => $data[Constant::NAME_TEXT_POST_TITLE],
+            Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL => (!empty($data[Constant::NAME_TEXT_CONTACT_EMAIL])) ? $data[Constant::NAME_TEXT_CONTACT_EMAIL] : NULL,
+            Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE => (!empty($data[Constant::NAME_TEXT_CONTACT_PHONE])) ? $data[Constant::NAME_TEXT_CONTACT_PHONE] : NULL,
+            Constant::TABLE_POSTS_COLUMN_REMARK => (!empty($data[Constant::NAME_TEXT_POST_REMARK])) ? $data[Constant::NAME_TEXT_POST_REMARK] : NULL,
+            Constant::TABLE_POSTS_COLUMN_UPDATED_TIME => $data[Constant::NAME_HIDDEN_POST_UPDATEDAT]
+        ]);
+        return $result ? $data : NULL;
     }
 
     /**
@@ -86,7 +107,7 @@ class Post extends CI_Model {
             $resultLength = count($result);
             for ($col = 0; $col < $resultLength; $col++) {
                 $file_contents = nl2br(file_get_contents($result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]));
-                $result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link($file_contents); // unset post_text_file_name and set file content
+                $result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link($file_contents, 'url', TRUE); // unset post_text_file_name and set file content
             }
             return $result;
         }

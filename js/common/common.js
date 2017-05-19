@@ -149,7 +149,6 @@ function sendActcode(action) {
             $("#id-form-actvcode").serializeArray(),
             function (response) {
                 var resp_arr = JSON.parse(response);
-                console.log(resp_arr);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
                     $(err_ptag).attr("class", "cl-error-small");
@@ -247,7 +246,7 @@ function post_edit_clik(element) {
             .attr("onclick", "editCancel();"));
     // hidden fields
     $(edit_container).find("#id-hidden-createdat").attr("id", "id-hidden-updatedat");
-    $(form).append($("<input type='hidden'>").attr("value", ($(original_container).find(".cl-span-epid").text())).attr("name", "pid"));
+    $(form).append($("<input type='hidden'>").attr("name", "pid").attr("value", ($(original_container).find(".cl-span-epid").text())));
     // change error p tag id 
     $(edit_container).find("#id-p-createposterr").attr("id", "id-p-editposterr");
 }
@@ -263,7 +262,11 @@ function submitEditPost(action) {
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
                 } else if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // clear
-                    console.log(response);
+                    var data = resp_arr["msg"];
+                    console.log(data);
+//                    $(original_container).find("#id-text-posttitle").val($data[""]);
+//                    $(original_container).find("#id-text-posttitle").val($data[""]);
+//                    $(original_container).find("#id-text-posttitle").val($data[""]);
                 } else if (!resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // validation error occured
                     showPostError("#id-p-editposterr", resp_arr["msg"]);
                 }
@@ -289,9 +292,7 @@ function editCancel() {
  * @returns {void}
  */
 function showPostError(id, msg) {
-    console.log(msg);
     $(id).text("*** " + msg + "***").fadeIn();
-    console.log($(id).text());
     setTimeout(function () {
         $(id).fadeOut();
     }, 3500);

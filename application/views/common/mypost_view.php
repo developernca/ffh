@@ -103,7 +103,7 @@ if (!is_null($post_list)) {
             echo $table;
         }
         // post id
-        echo '<span class="cl-span-epid" style="display:none;">' . base64_encode($row[Constant::TABLE_POSTS_COLUMN_ID]) . '</span>';
+        echo sprintf('<span name=%s class="cl-span-epid" style="display:none;">%s</span>', Constant::NAME_HIDDEN_POST_ID, $row[Constant::TABLE_POSTS_COLUMN_ID]);
         // edit
         echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="post_edit_clik(this);" />&#9998;</button>';
         // delete

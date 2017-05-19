@@ -64,8 +64,8 @@ class Account extends CI_Model {
      * Check whether current user activated his/her
      * account.
      * 
-     * @param type $cussid string
-     * @param type $email string
+     * @param type $cussid string current user session id
+     * @param type $email string  current user email
      * @return boolean true if current account is activated, false otherwise
      */
     public function is_activated($cussid, $email) {
@@ -79,7 +79,7 @@ class Account extends CI_Model {
      * 
      * @param string $id account id 
      * @param string $code activation code
-     * @return mixed
+     * @return mixed 
      */
     public function activate_account($id, $email, $code) {
         $this->db->where(Constant::TABLE_ACCOUNTS_COLUMN_ID, $id);

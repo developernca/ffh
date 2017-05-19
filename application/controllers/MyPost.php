@@ -77,23 +77,19 @@ class MyPost extends MY_Controller {
                 'msg' => strip_tags($validation_err_msg)
             ]));
         }
-        exit(json_encode([
-            'flg' => TRUE,
-            'msg' => $this->input->post()
-        ]));
         // get currently updated post
-        // $updated_post = $this->post->update_post($this->input->post());
-//        if (!is_null($inserted_post)) {
-//            exit(json_encode([
-//                'flg' => TRUE,
-//                'msg' => $inserted_post
-//            ]));
-//        } else {
-//            exit(json_encode([
-//                'flg' => FALSE,
-//                'msg' => 'Unexpectable error occured.'
-//            ]));
-//        }
+        $updated_post = $this->post->update_post($this->input->post());
+        if (!is_null($updated_post)) {
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $updated_post
+            ]));
+        } else {
+            exit(json_encode([
+                'flg' => FALSE,
+                'msg' => 'Unexpectable error occured.'
+            ]));
+        }
     }
 
     private function validate_post() {

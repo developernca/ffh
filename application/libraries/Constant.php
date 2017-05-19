@@ -52,6 +52,7 @@ class Constant {
     const NAME_HIDDEN_SIGNUP_TIME = 'suf_usr_time';
     const NAME_HIDDEN_POST_CREATEDAT = 'pc_time';
     const NAME_HIDDEN_POST_UPDATEDAT = 'pc_time';
+    const NAME_HIDDEN_POST_ID = 'pid';
     // name for select field
     const NAME_SELECT_POST_TYPE = 'type';
     // database table and column name
