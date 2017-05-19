@@ -64,6 +64,10 @@ class Post extends CI_Model {
         }
     }
 
+    public function update_post(array $data) {
+        
+    }
+
     /**
      * Get post by posted user.
      * @param String $id account_id of desired user

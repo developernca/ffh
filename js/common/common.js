@@ -247,7 +247,7 @@ function post_edit_clik(element) {
             .attr("onclick", "editCancel();"));
     // hidden fields
     $(edit_container).find("#id-hidden-createdat").attr("id", "id-hidden-updatedat");
-    $(form).append($("<input type='hidden'>").attr("value", ($(original_container).find(".cl-span-epid").text())));
+    $(form).append($("<input type='hidden'>").attr("value", ($(original_container).find(".cl-span-epid").text())).attr("name", "pid"));
     // change error p tag id 
     $(edit_container).find("#id-p-createposterr").attr("id", "id-p-editposterr");
 }

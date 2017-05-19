@@ -82,7 +82,7 @@ class MyPost extends MY_Controller {
             'msg' => $this->input->post()
         ]));
         // get currently updated post
-        // $inserted_post = $this->post->insert_post($this->input->post());
+        // $updated_post = $this->post->update_post($this->input->post());
 //        if (!is_null($inserted_post)) {
 //            exit(json_encode([
 //                'flg' => TRUE,
