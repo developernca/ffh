@@ -2,7 +2,7 @@
 
 /**
  * Model class for posts table.
- * 
+ *
  * @author Nyein Chan Aung<developernca@gmail.com>
  */
 class Post extends CI_Model {
@@ -18,7 +18,7 @@ class Post extends CI_Model {
 
     /**
      * Insert new data to posts table.
-     * 
+     *
      * @param array $data user submitted form data
      * @return array created data as array or null on failure
      */
@@ -37,7 +37,7 @@ class Post extends CI_Model {
             $is_file_exist = file_exists($post_content_file);
         } while ($is_file_exist);
         // write content to file
-        write_file($post_content_file, $data[Constant::NAME_TEXT_POST_CONTENT]);
+        write_file($post_content_file, $data[Constant::NAME_TEXT_POST_CONTENT], 'w+');
         // sort array to check select box data
         $type_arr = Constant::POST_TYPE_OPTIONS_ARR;
         sort($type_arr);
@@ -67,17 +67,18 @@ class Post extends CI_Model {
     /**
      * Update existing data in posts table.
      * Update file contents of post.
-     * 
+     *
      * @param array $data user submitted form data
      */
     public function update_post(array $data) {
         // update file contents [write file content to existing files]
         $this->db->select(Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME);
-        $path = $this->db->get_where(Constant::TABLE_POSTS, [Constant::TABLE_POSTS_COLUMN_ID => $data[Constant::NAME_HIDDEN_POST_ID]]);
-        write_file($path, $data[Constant::NAME_TEXT_POST_CONTENT]);
+        $path = $this->db->get_where(Constant::TABLE_POSTS, [Constant::TABLE_POSTS_COLUMN_ID => $data[Constant::NAME_HIDDEN_POST_ID]])->result_array();
+        //write_file($path, $data[Constant::NAME_TEXT_POST_CONTENT], 'w+');
+        write_file($path[0][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME], $data[Constant::NAME_TEXT_POST_CONTENT]);
         $data[Constant::NAME_TEXT_POST_CONTENT] = nl2br(auto_link($data[Constant::NAME_TEXT_POST_CONTENT], 'url'));
         // update in database
-        $this->db->where(Constant::TABLE_POSTS_COLUMN_ID, $data[Constant::NAME_HIDDEN]);
+        $this->db->where(Constant::TABLE_POSTS_COLUMN_ID, $data[Constant::NAME_HIDDEN_POST_ID]);
         $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $this->posted_user);
         $result = $this->db->update(Constant::TABLE_POSTS, [
             Constant::TABLE_POSTS_COLUMN_POST_TITLE => $data[Constant::NAME_TEXT_POST_TITLE],

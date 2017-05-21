@@ -6,14 +6,14 @@ var edit_container = null;
 /**
  * Initialize all necessary work when loading complete.
  */
-$(window).on("load", function () {
+$(window).on("load", function() {
     navChange();
 });
 
 /**
  * change current link to green color and black text
  * in navi ul-li
- * 
+ *
  * @returns {void}
  */
 function navChange() {
@@ -34,7 +34,7 @@ function navChange() {
 
 /**
  * show or hide navigation container
- * 
+ *
  * @returns {void}
  */
 function toggleNav() {
@@ -47,8 +47,8 @@ function toggleNav() {
 }
 
 /**
- * 
- * @param {string} action url 
+ *
+ * @param {string} action url
  * @return {void}
  */
 function signup(action) {
@@ -59,7 +59,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -76,7 +76,7 @@ function signup(action) {
 }
 
 /**
- * 
+ *
  * @param {type} action url
  * @returns {void}
  */
@@ -87,7 +87,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function (response) {
+            function(response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -136,7 +136,7 @@ function removeErrSmall() {
 
 /**
  * Send activation code for account activation.
- * 
+ *
  * @param {object} action url
  * @returns {void}
  */
@@ -147,7 +147,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -162,7 +162,7 @@ function sendActcode(action) {
 }
 
 /**
- * 
+ *
  * @param {type} action
  * @returns {undefined}
  */
@@ -172,7 +172,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -183,7 +183,7 @@ function submitPost(action) {
                     var pcontainer = $("<div class='cl-div-postcontainer'>");
                     // create post title p
                     var ep_title = $("<p class='cl-p-eptitle'>");
-                    ep_title.text(pdata["post_title"] + ' Test');
+                    ep_title.text(pdata["post_title"]);
                     pcontainer.append(ep_title);
                     // create post content p
                     var ep_content = $("<p class='cl-p-epcontent'>");
@@ -193,30 +193,48 @@ function submitPost(action) {
                     var rowCount = 0;
                     var table = $("<table border='0' cellpadding='4' cellspacing='0'>");
                     if (pdata["contact_email"] !== null) {
-                        table.append($("<tr><td>Contact Email</td><td><span class='cl-ep-contactemail'>" + pdata["contact_email"] + "</span><td>"));
+                        table.append($("<tr><td>Contact Email</td><td><span class='cl-span-epcontactemail'>" + pdata["contact_email"] + "</span><td>"));
+                        rowCount++;
                     }
                     if (pdata["contact_phone"] !== null) {
-                        table.append($("<tr><td>Contact Phone</td><td><span class='cl-ep-contactphone'>" + pdata["contact_phone"] + "</span><td>"));
+                        table.append($("<tr><td>Contact Phone</td><td><span class='cl-span-epcontactphone'>" + pdata["contact_phone"] + "</span><td>"));
+                        rowCount++;
                     }
                     if (pdata["remark"] !== null) {
-                        table.append($("<tr><td>Remark</td><td><span class='cl-ep-remark'>" + pdata["remark"] + "</span><td>"));
+                        table.append($("<tr><td>Remark</td><td><span class='cl-span-epremark'>" + pdata["remark"] + "</span><td>"));
+                        rowCount++;
                     }
-                    table.append($("<tr><td>Remark</td><td><span class='cl-ep-remark'>" + pdata["remark"] + "</span><td>"));
-                    pcontainer.append(table);
+                    // add row when there is at least one raw
+                    if (rowCount > 0) {
+                        pcontainer.append(table);
+                    } else {
+                        table = null;
+                    }
                     // edit button
-                    var edt_btn = $("<button class='cl-btn-small cl-btn-epedtbtn' onclick='post_edit_clik(this)';>&#9998;</button>");
+                    var edt_btn = $("<button class='cl-btn-small cl-btn-epedtbtn' onclick='postEditClick(this)';>&#9998;</button>");
                     var del_btn = $("<button class='cl-btn-small cl-btn-epdelbtn' onclick='post_delete_clik(this);'>&#10007;</button>");
                     // delete button
                     pcontainer.append(edt_btn);
                     pcontainer.append(del_btn);
                     pcontainer.insertAfter($("#id-div-cpcontainer"));
+                    // reset data in post create form
+                    document.getElementById("id-form-createpost").reset();
+                    // scroll to current posted div
+                    var container = $(".cl-div-postcontainer")[1];
+                    var position = $(container).position();
+                    window.scrollTo(0, position.top);
+                    // show user to know the latest post signicantlly
+                    $(container).fadeTo("slow", 0.5);
+                    setTimeout(function() {
+                        $(container).stop().fadeTo("slow", 1);
+                    }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
                     showPostError("#id-p-createposterr", resp_arr['msg']);
                 }
             });
 }
 
-function post_edit_clik(element) {
+function postEditClick(element) {
     // If there is an unfinish edit post, replace that post
     if (edit_container !== null) {
         $(edit_container).replaceWith($(original_container));
@@ -247,9 +265,13 @@ function post_edit_clik(element) {
     // hidden fields
     $(edit_container).find("#id-hidden-createdat").attr("id", "id-hidden-updatedat");
     $(form).append($("<input type='hidden'>").attr("name", "pid").attr("value", ($(original_container).find(".cl-span-epid").text())));
-    // change error p tag id 
+    // change error p tag id
     $(edit_container).find("#id-p-createposterr").attr("id", "id-p-editposterr");
+    // show top of the container
+    var position = $(edit_container).position();
+    window.scrollTo(0, position.top);
 }
+
 
 function submitEditPost(action) {
     var editAction = action + "index.php/mypost/edit";
@@ -257,16 +279,27 @@ function submitEditPost(action) {
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function (response) {
+            function(response) {
+                console.log(response);
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
                 } else if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // clear
                     var data = resp_arr["msg"];
                     console.log(data);
-//                    $(original_container).find("#id-text-posttitle").val($data[""]);
-//                    $(original_container).find("#id-text-posttitle").val($data[""]);
-//                    $(original_container).find("#id-text-posttitle").val($data[""]);
+                    $(original_container).find(".cl-p-eptitle").text(data["post_title"]);
+                    $(original_container).find(".cl-p-epcontent").text(data["post_content"]);
+                    if (data["contact_email"] === null) {
+
+                    }
+                    if (data["contact_phone"] === null) {
+
+                    }
+                    if (data["remark"] === null) {
+
+                    }
+                    // same logic as edit_cancel button pressed
+                    editCancel();
                 } else if (!resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // validation error occured
                     showPostError("#id-p-editposterr", resp_arr["msg"]);
                 }
@@ -275,7 +308,7 @@ function submitEditPost(action) {
 
 /**
  * Cancel edit process.
- * 
+ *
  * @returns {void}
  */
 function editCancel() {
@@ -286,14 +319,14 @@ function editCancel() {
 
 /**
  * Show error message to user when create or update post.
- * 
- * @param {String} id  id of the p tag to display error 
+ *
+ * @param {String} id  id of the p tag to display error
  * @param {String} msg error message
  * @returns {void}
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function () {
+    setTimeout(function() {
         $(id).fadeOut();
     }, 3500);
 }

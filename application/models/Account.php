@@ -10,7 +10,7 @@ class Account extends CI_Model {
      * Save data to accounts table. 
      * 
      * @param type $data sign up form data
-     * @return mixed return current inserted _id if registration success, null otherwise
+     * @return array return activation code and current inserted id if registration success, null otherwise
      */
     public function register($data) {
         // generate user id
@@ -23,6 +23,7 @@ class Account extends CI_Model {
         mkdir(FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $usr_id);
 
         // generate activation code
+        $activation_code = '';
         do {
             $activation_code = KeyGenerator::getAlphaNumString(6);
             $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code]);
@@ -42,7 +43,7 @@ class Account extends CI_Model {
             , Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code];
         $insert_success = $this->db->insert(Constant::TABLE_ACCOUNTS, $values);
         if ($insert_success) {
-            return $usr_id;
+            return ['activation_code' => $activation_code, 'id' => $usr_id];
         } else {
             return null;
         }

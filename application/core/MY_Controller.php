@@ -82,4 +82,9 @@ class MY_Controller extends CI_Controller {
         exit();
     }
 
+    protected function send_activation_mail($to, $code) {
+        $message = sprintf(Constant::ACTIVATION_MAIL_BODY, $code);
+        mail($to, Constant::ACTIVATION_MAIL_SUBJECT, $message, Constant::HTML_MAIL_HEADER);
+    }
+
 }

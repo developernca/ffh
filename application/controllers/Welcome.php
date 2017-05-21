@@ -13,7 +13,7 @@ class Welcome extends MY_Controller {
 
     /**
      * @override
-     * @return 
+     * @return
      */
     protected function authenticate() {
         $authentication_flag = parent::authenticate();
@@ -21,12 +21,12 @@ class Welcome extends MY_Controller {
             return;
         } else if ($authentication_flag == Constant::AUTH_ACTIVATION_REQUIRED) {
             ($this->input->is_ajax_request()) ?
-                    exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/confirmation'])) :
-                    redirect(base_url() . 'index.php/confirmation/');
+                            exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/confirmation'])) :
+                            redirect(base_url() . 'index.php/confirmation/');
         } else if ($authentication_flag == Constant::AUTH_ALREADY_LOGIN) {
             ($this->input->is_ajax_request()) ?
-                    exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/home'])) :
-                    redirect(base_url() . 'index.php/home/');
+                            exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/home'])) :
+                            redirect(base_url() . 'index.php/home/');
         }
     }
 
@@ -44,12 +44,14 @@ class Welcome extends MY_Controller {
     public function signup() {
         $this->authenticate();
         $validation_err_msg = $this->signup_validation();
-        if (is_null($validation_err_msg) && !is_null($id = $this->account->register($this->input->post()))) {
+        if (is_null($validation_err_msg) && !is_null($result = $this->account->register($this->input->post()))) {
             // set session data
+            $email = $this->input->post(Constant::NAME_TEXT_SIGNUP_FORM_EMAIL);
             $this->session->set_userdata([
-                Constant::SESSION_USSID => $id
-                , Constant::SESSION_EMAIL => $this->input->post(Constant::NAME_TEXT_SIGNUP_FORM_EMAIL)
+                Constant::SESSION_USSID => $result['id']
+                , Constant::SESSION_EMAIL => $email
             ]);
+            $this->send_activation_mail($email, $result['activation_code']);
             exit(json_encode([
                 'flg' => 0
             ]));
@@ -129,7 +131,6 @@ class Welcome extends MY_Controller {
         if (!$this->form_validation->run()) {
             return validation_errors();
         }
-
         return null; // no errors
     }
 

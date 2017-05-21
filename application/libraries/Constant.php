@@ -82,6 +82,7 @@ class Constant {
     // =============== VIEW DATA KEY NAME ===================
     const VDN_POST_TYPES_OPTIONS = 'vdn_post_types_options';
     const VDN_CURRENTUSER_POST_LISTS = 'vdn_current_user_post_lists';
+    const VDN_SESSION_EMAIL = 'vdn_email';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array
@@ -93,5 +94,9 @@ class Constant {
         'Research',
         'Engineering'
     ];
+    // mail subject
+    const ACTIVATION_MAIL_SUBJECT = 'Activation code for your ffh account';
+    const ACTIVATION_MAIL_BODY = '<HTML><HEAD>Acivation code</HEAD><BODY><PRE>Thank you for creating FFH accounts. <BR>Recommend you to copy and paste the code. <BR>Some characters (I,l,1,0,O,D) are easy to wrong.<BR>Below is your activation code.<BR><BR>%s</PRE></BODY></HTML>';
+    const HTML_MAIL_HEADER = 'Content-type: text/html; charset=iso-8859-1';
 
 }

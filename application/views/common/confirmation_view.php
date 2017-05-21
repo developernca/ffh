@@ -7,7 +7,8 @@ echo '</p>';
 // =========== CONFIRM ===========
 echo '<div class="cl-div-confirmation" id="id-div-confirm">'; // begin confirmation div
 
-echo '<p id="id-p-csinfo">A 6 digits activation code was sent.</p>';
+echo '<p id="id-p-csinfo">A 6 digits activation code was sent to,</p>';
+echo sprintf('<p style="color: #0000FF;"> %s </p>', ${Constant::VDN_SESSION_EMAIL});
 
 echo '<form id="id-form-actvcode">';
 

@@ -32,7 +32,7 @@ class Confirmation extends MY_Controller {
      */
     public function index() {
         $this->authenticate();
-        $this->load_view(Constant::CONFIRMATION_VIEW, null);
+        $this->load_view(Constant::CONFIRMATION_VIEW, [Constant::VDN_SESSION_EMAIL => $this->session->userdata(Constant::SESSION_EMAIL)]);
     }
 
     public function activate() {
