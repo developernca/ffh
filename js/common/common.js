@@ -6,7 +6,7 @@ var edit_container = null;
 /**
  * Initialize all necessary work when loading complete.
  */
-$(window).on("load", function() {
+$(window).on("load", function () {
     navChange();
 });
 
@@ -59,7 +59,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -87,7 +87,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function(response) {
+            function (response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -147,7 +147,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -172,7 +172,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -225,7 +225,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -272,14 +272,19 @@ function postEditClick(element) {
     window.scrollTo(0, position.top);
 }
 
-
+/**
+ * Call when click Edit button.
+ * 
+ * @param {string} action base_url
+ * @returns {void}
+ */
 function submitEditPost(action) {
     var editAction = action + "index.php/mypost/edit";
     $("#id-hidden-updatedat").val(new Date().getTime());
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function(response) {
+            function (response) {
                 console.log(response);
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
@@ -288,15 +293,26 @@ function submitEditPost(action) {
                     var data = resp_arr["msg"];
                     console.log(data);
                     $(original_container).find(".cl-p-eptitle").text(data["post_title"]);
-                    $(original_container).find(".cl-p-epcontent").text(data["post_content"]);
-                    if (data["contact_email"] === null) {
-
+                    $(original_container).find(".cl-p-epcontent").html(data["post_content"]);
+                    // handle original data
+                    var original_table = $(original_container).find("table");
+                    var new_table = $("<table>");
+                    if ($(original_table).length > 0) {
+                        // original table exist and replace with new one
+                        $(original_table).replaceWith($(new_table));
+                    } else {
+                        // original table not exist and insert new one
+                        $(original_container).append($(new_table));
                     }
-                    if (data["contact_phone"] === null) {
-
+                    // set table data
+                    if (data["contact_email"] !== "") {
+                        $(new_table).append("<tr>").append("<td>Contact Email</td>").append("<td><span class='cl-span-epcontactemail'>" + data["contact_email"] + "</span></td>");
                     }
-                    if (data["remark"] === null) {
-
+                    if (data["contact_phone"] !== "") {
+                        $(new_table).append("<tr>").append("<td>Contact Phone</td>").append("<td><span class='cl-span-epcontactphone'>" + data["contact_phone"] + "</span></td > ");
+                    }
+                    if (data["remark"] !== "") {
+                        $(new_table).append("<tr>").append("<td>Remark</td>").append("<td><span class='cl-span-epremark'>" + data["remark"] + "</span></td>");
                     }
                     // same logic as edit_cancel button pressed
                     editCancel();
@@ -313,6 +329,10 @@ function submitEditPost(action) {
  */
 function editCancel() {
     $(edit_container).replaceWith($(original_container));
+    // scroll to current posted div
+    var position = $(original_container).position();
+    window.scrollTo(0, position.top);
+    // reset containers
     original_container = null;
     edit_container = null;
 }
@@ -326,7 +346,7 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function() {
+    setTimeout(function () {
         $(id).fadeOut();
     }, 3500);
 }

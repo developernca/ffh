@@ -1,7 +1,5 @@
 <?php
 
-defined('BASEPATH') or exit('No direct script access allowed');
-
 class Welcome extends MY_Controller {
 
     /**
@@ -21,12 +19,12 @@ class Welcome extends MY_Controller {
             return;
         } else if ($authentication_flag == Constant::AUTH_ACTIVATION_REQUIRED) {
             ($this->input->is_ajax_request()) ?
-                            exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/confirmation'])) :
-                            redirect(base_url() . 'index.php/confirmation/');
+                    exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/confirmation'])) :
+                    redirect(base_url() . 'index.php/confirmation/');
         } else if ($authentication_flag == Constant::AUTH_ALREADY_LOGIN) {
             ($this->input->is_ajax_request()) ?
-                            exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/home'])) :
-                            redirect(base_url() . 'index.php/home/');
+                    exit(json_encode(['flg' => 0, 'action' => base_url() . '/index.php/home'])) :
+                    redirect(base_url() . 'index.php/home/');
         }
     }
 

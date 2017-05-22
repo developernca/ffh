@@ -108,6 +108,8 @@ if (!is_null($post_list)) {
         echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="postEditClick(this);" />&#9998;</button>';
         // delete
         echo '<button class="cl-btn-small cl-btn-epdelbtn" onclick="postDeleteClick();" />&#10007;</button>';
+        // post type
+        echo sprintf('<span class="cl-span-posttype" value="%s"/>Type : %s</span>', array_search($row[Constant::TABLE_POSTS_COLUMN_TYPE], ${Constant::VDN_POST_TYPES_OPTIONS}), $row[Constant::TABLE_POSTS_COLUMN_TYPE]);
         echo '</div>';
     }
 }

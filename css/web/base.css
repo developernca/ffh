@@ -117,7 +117,7 @@ body{
     display: inline-block;
     background: #C0C0C0;
     border-radius: 10px;
-    box-shadow: 5px 4px #FFFFFF;
+    box-shadow: 5px 4px ;/*#FFFFFF;*/
     text-align: left;
     padding-left: 15px;
     padding-top: 15px;
@@ -176,6 +176,22 @@ body{
     font-size: medium;
 }
 
+.cl-p-epcontent{
+    margin-right: 3px;
+    background: #FFFFFF;
+    padding: 5px 0px 5px 5px;
+    border-left: 3px solid green;
+}
+
+.cl-p-epcontent a{
+    text-decoration: none;
+}
+
+.cl-p-eptitle{
+    font-weight: bolder;
+    font-size: x-large;
+}
+
 .cl-btn-small{
     background-color: #1FDA9A;
     font-size: x-large;
@@ -197,4 +213,11 @@ body{
     margin-bottom: 10px;
     color: #FF0000;
     float: right;
+}
+
+.cl-span-posttype{
+    display: inline-block;
+    margin-top: 10px;
+    font-size: smaller;
+    font-style: italic;
 }

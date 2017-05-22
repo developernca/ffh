@@ -76,7 +76,7 @@ class Post extends CI_Model {
         $path = $this->db->get_where(Constant::TABLE_POSTS, [Constant::TABLE_POSTS_COLUMN_ID => $data[Constant::NAME_HIDDEN_POST_ID]])->result_array();
         //write_file($path, $data[Constant::NAME_TEXT_POST_CONTENT], 'w+');
         write_file($path[0][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME], $data[Constant::NAME_TEXT_POST_CONTENT]);
-        $data[Constant::NAME_TEXT_POST_CONTENT] = nl2br(auto_link($data[Constant::NAME_TEXT_POST_CONTENT], 'url'));
+        $data[Constant::NAME_TEXT_POST_CONTENT] = auto_link(nl2br($data[Constant::NAME_TEXT_POST_CONTENT]), 'url', TRUE);
         // update in database
         $this->db->where(Constant::TABLE_POSTS_COLUMN_ID, $data[Constant::NAME_HIDDEN_POST_ID]);
         $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $this->posted_user);
