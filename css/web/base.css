@@ -1,4 +1,4 @@
-/* 
+/*
     Created on : Apr 8, 2017, 10:56:14 PM
     Author     : nyeinchanaung
 */
@@ -16,7 +16,7 @@ body{
     color: #FFFFFF;
     background: #1FDA9A;
     font-weight: bolder;
-    font-size: 3em; 
+    font-size: 3em;
 }
 #id-div-maincontainer{
     background: lightgray;
@@ -71,7 +71,7 @@ body{
 #id-div-navcontainer{
     display: inline-block;
     text-align: center;
-    width: 30%;    
+    width: 30%;
 }
 
 #id-div-navcontainer p{
@@ -108,7 +108,7 @@ body{
 }
 
 #id-ul-navlinkcontainer li:hover{
-    cursor: pointer;    
+    cursor: pointer;
     font-style: italic;
 }
 
@@ -220,4 +220,5 @@ body{
     margin-top: 10px;
     font-size: smaller;
     font-style: italic;
+    color: #0000FF;
 }

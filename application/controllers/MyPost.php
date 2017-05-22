@@ -92,6 +92,16 @@ class MyPost extends MY_Controller {
         }
     }
 
+    public function delete($post_id) {
+        $this->authenticate();
+        if (!$this->input->is_ajax_request()) {
+            redirect(base_url() + "index.php/home");
+            exit();
+        } else {
+            exit(json_encode($this->input->post()));
+        }
+    }
+
     private function validate_post() {
         // Title [cannot be blank]
         $this->form_validation->set_rules(Constant::NAME_TEXT_POST_TITLE, '', 'required|max_length[500]', ['required' => 'Title is required. Please enter title.', 'max_length' => 'Title cannot have more than 500 characters.']);

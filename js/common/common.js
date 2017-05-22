@@ -6,7 +6,7 @@ var edit_container = null;
 /**
  * Initialize all necessary work when loading complete.
  */
-$(window).on("load", function () {
+$(window).on("load", function() {
     navChange();
 });
 
@@ -59,7 +59,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -87,7 +87,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function (response) {
+            function(response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -147,7 +147,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -172,7 +172,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -225,7 +225,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -242,7 +242,6 @@ function postEditClick(element) {
     original_container = $(element).parent();
     edit_container = $("#id-div-cpcontainer").clone();
     // replace and add all necessary data
-    console.log($(original_container).find(".cl-span-posttype").attr("value"));
     $(original_container).replaceWith($(edit_container));
     $(edit_container).attr("id", "id-div-epcontainer");
     $(edit_container).find("#id-text-posttitle").val($(original_container).find(".cl-p-eptitle").text());
@@ -263,6 +262,9 @@ function postEditClick(element) {
             .attr("value", "Cancel")
             .attr("class", "cl-btn-medium cl-common-hover")
             .attr("onclick", "editCancel();"));
+    // set select box value
+    var original_ptype = $(original_container).find(".cl-span-posttype").attr("value");
+    $(edit_container).find("#id-select-type").val(original_ptype);
     // hidden fields
     $(edit_container).find("#id-hidden-createdat").attr("id", "id-hidden-updatedat");
     $(form).append($("<input type='hidden'>").attr("name", "pid").attr("value", ($(original_container).find(".cl-span-epid").text())));
@@ -273,9 +275,22 @@ function postEditClick(element) {
     window.scrollTo(0, position.top);
 }
 
+function postDeleteClick(element, action) {
+    var confirm_delete = confirm("Are you you want to delete tihs post");
+    if (confirm_delete) {
+        var _id = $(element).parent().find(".cl-span-epid").text();
+        $.post(
+                action + "index.php/mypost/delete/" + _id,
+                null,
+                function(response) {
+                    console.log(response);
+                });
+    }
+}
+
 /**
  * Call when click Edit button.
- * 
+ *
  * @param {string} action base_url
  * @returns {void}
  */
@@ -285,7 +300,7 @@ function submitEditPost(action) {
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function (response) {
+            function(response) {
                 console.log(response);
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
@@ -315,6 +330,8 @@ function submitEditPost(action) {
                     if (data["remark"] !== "") {
                         $(new_table).append("<tr>").append("<td>Remark</td>").append("<td><span class='cl-span-epremark'>" + data["remark"] + "</span></td>");
                     }
+                    // set post type
+                    $(original_container).find(".cl-span-posttype").text("Type : " + data["type"]);
                     // same logic as edit_cancel button pressed
                     editCancel();
                 } else if (!resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // validation error occured
@@ -347,7 +364,7 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function () {
+    setTimeout(function() {
         $(id).fadeOut();
     }, 3500);
 }

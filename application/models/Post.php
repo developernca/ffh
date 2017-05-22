@@ -9,11 +9,15 @@ class Post extends CI_Model {
 
     private $base_path;
     private $posted_user;
+    private $type_arr;
 
     public function __construct() {
         parent::__construct();
         $this->posted_user = $this->session->userdata(Constant::SESSION_USSID);
         $this->base_path = FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $this->posted_user . DIRECTORY_SEPARATOR; // ffh/usr/usr_id/
+        // sort array to check select box data
+        $this->type_arr = Constant::POST_TYPE_OPTIONS_ARR;
+        sort($this->type_arr);
     }
 
     /**
@@ -38,9 +42,6 @@ class Post extends CI_Model {
         } while ($is_file_exist);
         // write content to file
         write_file($post_content_file, $data[Constant::NAME_TEXT_POST_CONTENT], 'w+');
-        // sort array to check select box data
-        $type_arr = Constant::POST_TYPE_OPTIONS_ARR;
-        sort($type_arr);
         // insert into table
         $values = [
             Constant::TABLE_POSTS_COLUMN_ID => $post_id,
@@ -49,7 +50,7 @@ class Post extends CI_Model {
             Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL => (!empty($data[Constant::NAME_TEXT_CONTACT_EMAIL])) ? $data[Constant::NAME_TEXT_CONTACT_EMAIL] : NULL,
             Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE => (!empty($data[Constant::NAME_TEXT_CONTACT_PHONE])) ? $data[Constant::NAME_TEXT_CONTACT_PHONE] : NULL,
             Constant::TABLE_POSTS_COLUMN_REMARK => (!empty($data[Constant::NAME_TEXT_POST_REMARK])) ? $data[Constant::NAME_TEXT_POST_REMARK] : NULL,
-            Constant::TABLE_POSTS_COLUMN_TYPE => $type_arr[$data[Constant::NAME_SELECT_POST_TYPE]],
+            Constant::TABLE_POSTS_COLUMN_TYPE => $this->type_arr[$data[Constant::NAME_SELECT_POST_TYPE]],
             Constant::TABLE_POSTS_COLUMN_POSTED_TIME => $data[Constant::NAME_HIDDEN_POST_CREATEDAT],
             Constant::TABLE_POSTS_COLUMN_UPDATED_TIME => $data[Constant::NAME_HIDDEN_POST_CREATEDAT],
             Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID => $this->posted_user
@@ -77,6 +78,9 @@ class Post extends CI_Model {
         //write_file($path, $data[Constant::NAME_TEXT_POST_CONTENT], 'w+');
         write_file($path[0][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME], $data[Constant::NAME_TEXT_POST_CONTENT]);
         $data[Constant::NAME_TEXT_POST_CONTENT] = auto_link(nl2br($data[Constant::NAME_TEXT_POST_CONTENT]), 'url', TRUE);
+        // post type
+        $post_type = $this->type_arr[$data[Constant::NAME_SELECT_POST_TYPE]];
+        $data[Constant::NAME_SELECT_POST_TYPE] = $post_type;
         // update in database
         $this->db->where(Constant::TABLE_POSTS_COLUMN_ID, $data[Constant::NAME_HIDDEN_POST_ID]);
         $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $this->posted_user);
@@ -84,6 +88,7 @@ class Post extends CI_Model {
             Constant::TABLE_POSTS_COLUMN_POST_TITLE => $data[Constant::NAME_TEXT_POST_TITLE],
             Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL => (!empty($data[Constant::NAME_TEXT_CONTACT_EMAIL])) ? $data[Constant::NAME_TEXT_CONTACT_EMAIL] : NULL,
             Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE => (!empty($data[Constant::NAME_TEXT_CONTACT_PHONE])) ? $data[Constant::NAME_TEXT_CONTACT_PHONE] : NULL,
+            Constant::TABLE_POSTS_COLUMN_TYPE => $post_type,
             Constant::TABLE_POSTS_COLUMN_REMARK => (!empty($data[Constant::NAME_TEXT_POST_REMARK])) ? $data[Constant::NAME_TEXT_POST_REMARK] : NULL,
             Constant::TABLE_POSTS_COLUMN_UPDATED_TIME => $data[Constant::NAME_HIDDEN_POST_UPDATEDAT]
         ]);
