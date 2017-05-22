@@ -242,6 +242,7 @@ function postEditClick(element) {
     original_container = $(element).parent();
     edit_container = $("#id-div-cpcontainer").clone();
     // replace and add all necessary data
+    console.log($(original_container).find(".cl-span-posttype").attr("value"));
     $(original_container).replaceWith($(edit_container));
     $(edit_container).attr("id", "id-div-epcontainer");
     $(edit_container).find("#id-text-posttitle").val($(original_container).find(".cl-p-eptitle").text());
