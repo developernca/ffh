@@ -1,8 +1,8 @@
 <?php
 
 /**
- * 
- *  
+ *
+ *
  * @author Nyein Chan Aung <developernca@gmail.com>
  */
 class DiscussionAccess extends MY_Controller {
@@ -33,8 +33,12 @@ class DiscussionAccess extends MY_Controller {
         }
     }
 
-    public function get($_id) {
-        $discussions = $this->discussion->get_diss_by_postid($_id);
+    public function submit() {
+        exit(json_encode($this->input->post()));
+    }
+
+    public function get($post_id) {
+        $discussions = $this->discussion->get_diss_by_postid($post_id);
         exit(json_encode($discussions));
     }
 

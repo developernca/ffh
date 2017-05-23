@@ -6,7 +6,7 @@ var edit_container = null;
 /**
  * Initialize all necessary work when loading complete.
  */
-$(window).on("load", function () {
+$(window).on("load", function() {
     setPostUpdatedTime();
     navChange();
 });
@@ -70,7 +70,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -98,7 +98,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function (response) {
+            function(response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -158,7 +158,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -183,7 +183,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -236,7 +236,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -289,7 +289,7 @@ function postEditClick(element) {
 /**
  * Call when user click delete button. Get id from hidden field of
  * current post and if response flag is true then remove post.
- * 
+ *
  * @param {Object} element button
  * @param {String} action base url
  * @returns {void}
@@ -303,7 +303,7 @@ function postDeleteClick(element, action) {
         $.post(
                 action + "index.php/mypost/delete/" + _id,
                 null,
-                function (response) {
+                function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) {
                         $(parent_container).remove();
@@ -324,7 +324,7 @@ function submitEditPost(action) {
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function (response) {
+            function(response) {
                 console.log(response);
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
@@ -388,28 +388,63 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function () {
+    setTimeout(function() {
         $(id).fadeOut();
     }, 3500);
 }
 
+/**
+ * Show discussions and discussion form.
+ *
+ * @param {object} element span tag
+ * @param {string} action base url
+ * @returns {void}
+ */
 function showDiscussion(element, action) {
     var parent = $(element).parent();
-    $(parent).append(generateDiscussionBox());
-    $.post(
-            action + "index.php/discussionaccess/get/" + $(parent).find(".cl-span-epid").text(),
-            null,
-            function (response) {
-                console.log(response);
-            });
+    var showDissText = $(parent).find(".cl-span-showdiss");
+    if ($(showDissText).attr("value") === "0") {
+        $(showDissText).text("Hide discussions");
+        $(showDissText).attr("value", "1");// set value to 1, (1 is open, toggle click will hide div)
+        $(parent).append(generateDiscussionBox(action));
+        $.post(
+                action + "index.php/discussionaccess/get/" + $(parent).find(".cl-span-epid").text(),
+                null,
+                function(response) {
+                    console.log(response);
+                });
+    } else {
+        $(parent).find(".cl-div-disscontainer").hide();
+        $(showDissText).attr("value", "0");// set value to 0, (0 is hide, toggle click will show div)
+        $(showDissText).text("Show discussions");
+    }
 }
 
-function generateDiscussionBox() {
+/**
+ * Dynamically create a div for discussions and discussion form.
+ *
+ * @param {string} action base url
+ * @returns {object} created div
+ */
+function generateDiscussionBox(action) {
     var container_div = $("<div class='cl-div-disscontainer'>");
-    var text_area = $("<textarea class='cl-textarea-discussion' rows=4 width='90%' >");
+    var text_area = $("<textarea class='cl-textarea-discussion' rows=4>");
     var submit_button = $("<button class='cl-btn-dissubmit'>Submit</button>");
+    $(submit_button).attr("onclick", "submitDiscussion(\'" + action + "\', this);");
     $(container_div).append($(text_area));
     $(container_div).append($("<br/>"));
     $(container_div).append($(submit_button));
     return $(container_div);
+}
+
+function submitDiscussion(action, element) {
+    var discussion_text = $(element).parent().find(".cl-textarea-discussion").val();
+    if (discussion_text !== "") {
+        $.post(
+                action + "index.php/discussionaccess/submit",
+                {"diss": discussion_text, "updated": new Date().getTime()},
+                function(response) {
+                    console.log(response);
+                });
+    }
 }

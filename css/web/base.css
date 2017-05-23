@@ -244,3 +244,27 @@ body{
     font-size: larger;
     padding: 10px;
 }
+
+/* div for discussions */
+.cl-div-disscontainer{
+    margin: 5px 0px 10px 0px;
+}
+
+/*discussion textarea*/
+.cl-textarea-discussion{
+    resize: none;
+    width: 80%;
+}
+/* discussion submit button */
+.cl-btn-dissubmit{
+    border: none;
+    color: #0000FF;
+    text-decoration: underline;
+    font-size: x-small;
+    background-color: transparent;
+    font-family: sans-serif;
+}
+
+.cl-btn-dissubmit:hover{
+    cursor: pointer;
+}

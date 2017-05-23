@@ -53,7 +53,7 @@ echo form_dropdown([
     'id' => 'id-select-type',
     'class' => 'cl-select-large',
     'name' => Constant::NAME_SELECT_POST_TYPE,
-    ], ${Constant::VDN_POST_TYPES_OPTIONS});
+        ], ${Constant::VDN_POST_TYPES_OPTIONS});
 echo '<br/>';
 echo form_input([
     'type' => 'button',
@@ -113,7 +113,7 @@ if (!is_null($post_list)) {
         echo sprintf('<span class="cl-span-posttype" value="%s"/>Type : %s</span>', array_search($row[Constant::TABLE_POSTS_COLUMN_TYPE], ${Constant::VDN_POST_TYPES_OPTIONS}), $row[Constant::TABLE_POSTS_COLUMN_TYPE]);
         echo '<br />';
         // load comment text
-        echo sprintf('<span class="cl-span-showdiss" value="0" onclick="showDiscussion(this,\'%s\');">Show discussion</span>', base_url());
+        echo sprintf('<span class="cl-span-showdiss" value="0" appended="0" onclick="showDiscussion(this,\'%s\');">Show discussion</span>', base_url());
         echo '</div>';
     }
     // pagination links
