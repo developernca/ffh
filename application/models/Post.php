@@ -96,11 +96,16 @@ class Post extends CI_Model {
     }
 
     /**
+     * 
+
      * Get post by posted user.
      * @param String $id account_id of desired user
+     * @param int $limit row limit for pagination
+     * @param int $start pointer for start row
      * @return mixed return result set as array or null in case of no post
      */
-    public function get_post_by_user($id) {
+    public function get_post_by_user($id, $limit, $start) {
+        $this->db->limit($limit, $start);
         $this->db->select();
         $this->db->from(Constant::TABLE_POSTS);
         $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $id); // where -> get post by id
@@ -117,6 +122,22 @@ class Post extends CI_Model {
             }
             return $result;
         }
+    }
+
+    public function count_post_by_user($id) {
+        return $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $id)->from(Constant::TABLE_POSTS)->count_all_results();
+    }
+
+    /**
+     * Delete post by post id. Because of id is unique
+     * data will be deleted one item at a time.
+     * 
+     * @param String $id post_id
+     * @return Boolean true on success, false on failure
+     */
+    public function delete_post_by_id($id) {
+        $this->db->where(Constant::TABLE_POSTS_COLUMN_ID, $id);
+        return $this->db->delete(Constant::TABLE_POSTS);
     }
 
 }

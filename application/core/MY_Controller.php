@@ -40,12 +40,6 @@ class MY_Controller extends CI_Controller {
     protected function authenticate() {
         $session_id = $this->session->userdata(Constant::SESSION_USSID); //get_cookie(Constant::COOKIE_USSID);
         if (!is_null($session_id)) {
-            /**
-             * If cookie session id (which come from client/browser side) and 
-             * session id (which exist in server side) are equal, then the result
-             * will be assumed as valid session id (no fake cookie id) exist.
-             * Session id means _id column of accounts table.
-             */
             if ($this->account->is_activated($this->session->userdata(Constant::SESSION_USSID), $this->session->userdata(Constant::SESSION_EMAIL))) {
                 return Constant::AUTH_ALREADY_LOGIN;
             } else if (!$this->account->is_activated($this->session->userdata(Constant::SESSION_USSID), $this->session->userdata(Constant::SESSION_EMAIL))) {

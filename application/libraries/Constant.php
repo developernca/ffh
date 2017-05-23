@@ -79,9 +79,17 @@ class Constant {
     const TABLE_POSTS_COLUMN_POSTED_TIME = 'posted_time';
     const TABLE_POSTS_COLUMN_UPDATED_TIME = 'updated_time';
     const TABLE_POSTS_COLUMN_ACCOUNT_ID = 'account_id';
+    // DISCUSSIONS TABLE
+    // 
+    const TABLE_DISCUSSIONS = 'discussions';
+    const TABLE_DISCUSSION_COLUMN_ID = '_id';
+    const TABLE_DISCUSSION_COLUMN_FILENAME = 'filename';
+    const TABLE_DISCUSSION_COLUMN_DISCUSSEDBY = 'discussed_by';
+    const TABLE_DISCUSSION_COLUMN_POST_ID = 'post_id';
     // =============== VIEW DATA KEY NAME ===================
     const VDN_POST_TYPES_OPTIONS = 'vdn_post_types_options';
     const VDN_CURRENTUSER_POST_LISTS = 'vdn_current_user_post_lists';
+    const VDN_PAGINATION_LINK = 'links';
     const VDN_SESSION_EMAIL = 'vdn_email';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';

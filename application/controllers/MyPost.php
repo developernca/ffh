@@ -3,21 +3,24 @@
 class MyPost extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(['html', 'form', 'file'], ['form_validation', 'constant', 'session', 'keygenerator', 'table'], ['account', 'post']);
+        parent::__construct(['date', 'html', 'form', 'file'], ['form_validation', 'constant', 'session', 'keygenerator', 'table', 'pagination'], ['account', 'post']);
     }
 
-    // @override
+    /**
+     * 
+     * @return type
+     */
     protected function authenticate() {
         $authentication_flag = parent::authenticate();
         if ($authentication_flag === Constant::AUTH_ACTIVATION_REQUIRED) {
             ($this->input->is_ajax_request()) ?
-                            exit(json_encode(['flg' => TRUE, 'action' => base_url() . 'index.php/confirmation'])) :
-                            redirect(base_url() . 'index.php/confirmation');
+                    exit(json_encode(['flg' => TRUE, 'action' => base_url() . 'index.php/confirmation'])) :
+                    redirect(base_url() . 'index.php/confirmation');
             exit();
         } else if ($authentication_flag === Constant::AUTH_SESSION_NOT_EXIST) {
             ($this->input->is_ajax_request()) ?
-                            exit(json_encode(['flg' => TRUE, 'action' => base_url()])) :
-                            redirect(base_url());
+                    exit(json_encode(['flg' => TRUE, 'action' => base_url()])) :
+                    redirect(base_url());
             exit();
         } else if ($authentication_flag === Constant::AUTH_ALREADY_LOGIN) {
             return;
@@ -25,19 +28,27 @@ class MyPost extends MY_Controller {
     }
 
     /**
-     * Default index funtion for this controller.
+     * Default index function for this controller
+     * 
      */
     public function index() {
         $this->authenticate();
         $post_type = Constant::POST_TYPE_OPTIONS_ARR;
-        $currentuser_post_list = $this->post->get_post_by_user($this->session->userdata(Constant::SESSION_USSID));
+        $row_count = $this->post->count_post_by_user($this->session->userdata(Constant::SESSION_USSID));
+        $config['base_url'] = base_url() . 'index.php/mypost/index/';
+        $config['total_rows'] = $row_count;
+        $config['per_page'] = 10;
+        $config['uri_segment'] = 3;
+        $this->pagination->initialize($config);
+        $start = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $currentuser_post_list = $this->post->get_post_by_user($this->session->userdata(Constant::SESSION_USSID), 10, $start);
         sort($post_type);
-        $this->load_view(Constant::MY_POST_VIEW, [Constant::VDN_POST_TYPES_OPTIONS => $post_type, Constant::VDN_CURRENTUSER_POST_LISTS => $currentuser_post_list]);
+        $this->load_view(Constant::MY_POST_VIEW, [Constant::VDN_POST_TYPES_OPTIONS => $post_type, Constant::VDN_CURRENTUSER_POST_LISTS => $currentuser_post_list, Constant::VDN_PAGINATION_LINK => $this->pagination->create_links()]);
     }
 
     /**
-     * When user submit a post, validate post and if there is no input error, save to database,
-     * otherwise show error to user.
+     * When user submit a post, validate post and if there is no input error, 
+     * save to database, otherwise show error to user.
      */
     public function submit() {
         $this->authenticate();
@@ -92,16 +103,29 @@ class MyPost extends MY_Controller {
         }
     }
 
+    /**
+     * Delete post request. The function call can only be
+     * ajax request. If not so, redirect to home page.
+     * 
+     * @param String $post_id Post id to delete
+     */
     public function delete($post_id) {
-        $this->authenticate();
         if (!$this->input->is_ajax_request()) {
             redirect(base_url() + "index.php/home");
             exit();
         } else {
-            exit(json_encode($this->input->post()));
+            $this->authenticate();
+            exit(json_encode([
+                'flg' => $this->post->delete_post_by_id($post_id)
+            ]));
         }
     }
 
+    /**
+     * validate input form on post creation and updating.
+     * 
+     * @return mixed string when error occur, null on success
+     */
     private function validate_post() {
         // Title [cannot be blank]
         $this->form_validation->set_rules(Constant::NAME_TEXT_POST_TITLE, '', 'required|max_length[500]', ['required' => 'Title is required. Please enter title.', 'max_length' => 'Title cannot have more than 500 characters.']);

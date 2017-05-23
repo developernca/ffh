@@ -222,3 +222,25 @@ body{
     font-style: italic;
     color: #0000FF;
 }
+
+/* post update time span */
+.cl-span-posttime{
+    font-size: xx-small;
+    display: none;
+}
+
+/* show comment span */
+.cl-span-showdiss{
+    display: inline-block;
+    font-size: x-small;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.cl-span-showdiss:hover{
+    cursor: pointer;
+}
+.cl-p-paginationlinks strong,a{
+    text-decoration: underline;
+    font-size: larger;
+    padding: 10px;
+}
