@@ -6,7 +6,7 @@ var edit_container = null;
 /**
  * Initialize all necessary work when loading complete.
  */
-$(window).on("load", function() {
+$(window).on("load", function () {
     setPostUpdatedTime();
     navChange();
 });
@@ -38,7 +38,6 @@ function setPostUpdatedTime() {
     var spanLength = postedTimeSpan.length;
     for (var i = 0; i < spanLength; i++) {
         var time = new Date(parseInt($(postedTimeSpan[i]).text()));
-        console.log($(postedTimeSpan[i]).text());
         $(postedTimeSpan[i]).text("last updated : " + time.toString()).show();
     }
 }
@@ -70,7 +69,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -98,7 +97,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function(response) {
+            function (response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -158,7 +157,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -173,7 +172,8 @@ function sendActcode(action) {
 }
 
 /**
- *
+ * Create a new post.
+ * 
  * @param {type} action
  * @returns {undefined}
  */
@@ -183,7 +183,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -236,7 +236,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -245,6 +245,14 @@ function submitPost(action) {
             });
 }
 
+/**
+ * Call when user click post edit button.
+ * The fucntion does not submit any data,
+ * show only edit form to user.
+ * 
+ * @param {object} element button
+ * @returns {void}
+ */
 function postEditClick(element) {
     // If there is an unfinish edit post, replace that post
     if (edit_container !== null) {
@@ -303,7 +311,7 @@ function postDeleteClick(element, action) {
         $.post(
                 action + "index.php/mypost/delete/" + _id,
                 null,
-                function(response) {
+                function (response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) {
                         $(parent_container).remove();
@@ -313,7 +321,7 @@ function postDeleteClick(element, action) {
 }
 
 /**
- * Call when click Edit button.
+ * Submit user edited data.
  *
  * @param {string} action base_url
  * @returns {void}
@@ -324,14 +332,12 @@ function submitEditPost(action) {
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function(response) {
-                console.log(response);
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
                 } else if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // clear
                     var data = resp_arr["msg"];
-                    console.log(data);
                     $(original_container).find(".cl-p-eptitle").text(data["post_title"]);
                     $(original_container).find(".cl-p-epcontent").html(data["post_content"]);
                     // handle original data
@@ -380,7 +386,7 @@ function editCancel() {
 }
 
 /**
- * Show error message to user when create or update post.
+ * Show error message to user when error occur in create or update post.
  *
  * @param {String} id  id of the p tag to display error
  * @param {String} msg error message
@@ -388,7 +394,7 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function() {
+    setTimeout(function () {
         $(id).fadeOut();
     }, 3500);
 }
@@ -410,8 +416,17 @@ function showDiscussion(element, action) {
         $.post(
                 action + "index.php/discussionaccess/get/" + $(parent).find(".cl-span-epid").text(),
                 null,
-                function(response) {
-                    console.log(response);
+                function (response) {
+                    var resp_arr = JSON.parse(response);
+                    if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
+                        var data = resp_arr["msg"];
+                        var data_length = data.length;
+                        console.log(data_length);
+                        for (var i = 0; i < data_length; i++) {
+                            $(showDissText).text(data[i]["name"]);
+                            console.log(data[i]["name"]);
+                        }
+                    }
                 });
     } else {
         $(parent).find(".cl-div-disscontainer").hide();
@@ -437,14 +452,24 @@ function generateDiscussionBox(action) {
     return $(container_div);
 }
 
+/**
+ * Create a discussion.
+ * 
+ * @param {string} action base url
+ * @param {object} element button
+ * @returns {void}
+ */
 function submitDiscussion(action, element) {
-    var discussion_text = $(element).parent().find(".cl-textarea-discussion").val();
+    // get top most parent container of the current post which is div-postcontainer
+    var parent = $(element).parent().parent();
+    var discussion_text = $(parent).find(".cl-textarea-discussion").val();
+    var post_id = $(parent).find(".cl-span-epid").text();
     if (discussion_text !== "") {
         $.post(
                 action + "index.php/discussionaccess/submit",
-                {"diss": discussion_text, "updated": new Date().getTime()},
-                function(response) {
-                    console.log(response);
+                {"diss": discussion_text, "pid": post_id, "updated": new Date().getTime()},
+                function (response) {
+                    //var resp_arr = JSON.parse(response);
                 });
     }
 }

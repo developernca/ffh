@@ -124,8 +124,45 @@ class Post extends CI_Model {
         }
     }
 
+    /**
+     * Count all posts by posted user.
+     * 
+     * @param type $id current user id, ussid
+     * @return int number of rows
+     */
     public function count_post_by_user($id) {
         return $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $id)->from(Constant::TABLE_POSTS)->count_all_results();
+    }
+
+    /**
+     * Count all posts. This will be used to show post count
+     * on page.
+     */
+    public function count_all_posts() {
+        return $this->db->from(Constant::TABLE_POSTS)->count_all_results();
+    }
+
+    /**
+     * Get all posts in table. 
+     * 
+     * @param type $limit row limit for pagination
+     * @param type $start pointer for start rowSSFS
+     * @return mixed return result array if data exist or null on not
+     */
+    public function get_all_posts($limit, $start) {
+        $this->db->limit($limit, $start);
+        $query = $this->db->get(Constant::TABLE_POSTS);
+        $result = $query->result_array();
+        if (is_null($result) || empty($result)) {
+            return NULL;
+        } else {
+            $resultLength = count($result);
+            for ($col = 0; $col < $resultLength; $col++) {
+                $file_contents = nl2br(file_get_contents($result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]));
+                $result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link($file_contents, 'url', TRUE); // unset post_text_file_name and set file content
+            }
+            return $result;
+        }
     }
 
     /**
@@ -137,6 +174,7 @@ class Post extends CI_Model {
      */
     public function delete_post_by_id($id) {
         $this->db->where(Constant::TABLE_POSTS_COLUMN_ID, $id);
+        $this->db->where(Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID, $this->posted_user);
         return $this->db->delete(Constant::TABLE_POSTS);
     }
 

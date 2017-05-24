@@ -8,7 +8,7 @@
 class DiscussionAccess extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(['date', 'html', 'form'], ['constant', 'session', 'keygenerator', 'table'], ['account', 'post', 'discussion']);
+        parent::__construct(['date', 'html', 'form', 'file'], ['constant', 'session', 'keygenerator', 'table'], ['account', 'post', 'discussion']);
     }
 
     /**
@@ -34,12 +34,32 @@ class DiscussionAccess extends MY_Controller {
     }
 
     public function submit() {
-        exit(json_encode($this->input->post()));
+        $this->authenticate();
+        $discussions_inserted = $this->discussion->insert_discussion($this->input->post());
+        if (!is_null($discussions_inserted)) {
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $discussions_inserted
+            ]));
+        } else {
+            exit(json_encode([
+                'flg' => FALSE,
+            ]));
+        }
     }
 
     public function get($post_id) {
-        $discussions = $this->discussion->get_diss_by_postid($post_id);
-        exit(json_encode($discussions));
+        $discussion_list = $this->discussion->get_diss_by_postid($post_id);
+        if (!is_null($discussion_list)) {
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $discussion_list
+            ]));
+        } else {
+            exit(json_encode([
+                'flg' => FALSE
+            ]));
+        }
     }
 
 }

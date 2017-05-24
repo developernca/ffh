@@ -89,8 +89,10 @@ class Constant {
     // =============== VIEW DATA KEY NAME ===================
     const VDN_POST_TYPES_OPTIONS = 'vdn_post_types_options';
     const VDN_CURRENTUSER_POST_LISTS = 'vdn_current_user_post_lists';
+    const VDN_ALL_POSTS = 'vdn_all_posts';
     const VDN_PAGINATION_LINK = 'links';
     const VDN_SESSION_EMAIL = 'vdn_email';
+    const VDN_TOTAL_POSTS_COUNT = 'total_post_counts';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array

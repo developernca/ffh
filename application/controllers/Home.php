@@ -3,7 +3,7 @@
 class Home extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(['html', 'form'], ['constant', 'session'], ['account']);
+        parent::__construct(['html', 'form'], ['constant', 'session', 'pagination', 'table'], ['account', 'post', 'discussion']);
     }
 
     // @override
@@ -30,7 +30,28 @@ class Home extends MY_Controller {
      */
     public function index() {
         $this->authenticate();
-        $this->load_view(Constant::HOME_VIEW);
+        // get row count for pagination (count all posts)
+        $row_count = $this->post->count_all_posts();
+        // pagination configuration array
+        $config['base_url'] = base_url() . 'index.php/home/index/';
+        $config['total_rows'] = $row_count;
+        $config['per_page'] = 10;
+        $config['uri_segment'] = 3;
+        // initialize pagination
+        $this->pagination->initialize($config);
+        $start = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        // get all posts
+        $all_post = $this->post->get_all_posts(10, $start);
+        // get and sort post type array
+        $post_type = Constant::POST_TYPE_OPTIONS_ARR;
+        sort($post_type);
+        $this->load_view(
+            Constant::HOME_VIEW, [
+            Constant::VDN_ALL_POSTS => $all_post,
+            Constant::VDN_POST_TYPES_OPTIONS => $post_type,
+            Constant::VDN_TOTAL_POSTS_COUNT => $row_count,
+            Constant::VDN_PAGINATION_LINK => $this->pagination->create_links()
+        ]);
     }
 
     // @override
