@@ -6,7 +6,7 @@ var edit_container = null;
 /**
  * Initialize all necessary work when loading complete.
  */
-$(window).on("load", function () {
+$(window).on("load", function() {
     setPostUpdatedTime();
     navChange();
 });
@@ -69,7 +69,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -97,7 +97,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function (response) {
+            function(response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -157,7 +157,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -173,7 +173,7 @@ function sendActcode(action) {
 
 /**
  * Create a new post.
- * 
+ *
  * @param {type} action
  * @returns {undefined}
  */
@@ -183,7 +183,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -236,7 +236,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -249,7 +249,7 @@ function submitPost(action) {
  * Call when user click post edit button.
  * The fucntion does not submit any data,
  * show only edit form to user.
- * 
+ *
  * @param {object} element button
  * @returns {void}
  */
@@ -311,7 +311,7 @@ function postDeleteClick(element, action) {
         $.post(
                 action + "index.php/mypost/delete/" + _id,
                 null,
-                function (response) {
+                function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) {
                         $(parent_container).remove();
@@ -332,7 +332,7 @@ function submitEditPost(action) {
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -394,7 +394,7 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function () {
+    setTimeout(function() {
         $(id).fadeOut();
     }, 3500);
 }
@@ -412,19 +412,23 @@ function showDiscussion(element, action) {
     if ($(showDissText).attr("value") === "0") {
         $(showDissText).text("Hide discussions");
         $(showDissText).attr("value", "1");// set value to 1, (1 is open, toggle click will hide div)
-        $(parent).append(generateDiscussionBox(action));
+        $(parent).append(generateDiscussionForm(action));
         $.post(
                 action + "index.php/discussionaccess/get/" + $(parent).find(".cl-span-epid").text(),
                 null,
-                function (response) {
+                function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                         var data = resp_arr["msg"];
                         var data_length = data.length;
                         console.log(data_length);
                         for (var i = 0; i < data_length; i++) {
-                            $(showDissText).text(data[i]["name"]);
-                            console.log(data[i]["name"]);
+                            console.log(i);
+                            var view = generateDiscussionView();
+                            $(view).find(".cl-p-discussion").html(data[i]["filename"]);
+                            $(view).find(".cl-span-editdiss").text("Edit");
+                            $(view).find(".cl-span-deletediss").text("Delete");
+                            $(parent).append($(view));
                         }
                     }
                 });
@@ -441,7 +445,7 @@ function showDiscussion(element, action) {
  * @param {string} action base url
  * @returns {object} created div
  */
-function generateDiscussionBox(action) {
+function generateDiscussionForm(action) {
     var container_div = $("<div class='cl-div-disscontainer'>");
     var text_area = $("<textarea class='cl-textarea-discussion' rows=4>");
     var submit_button = $("<button class='cl-btn-dissubmit'>Submit</button>");
@@ -454,7 +458,7 @@ function generateDiscussionBox(action) {
 
 /**
  * Create a discussion.
- * 
+ *
  * @param {string} action base url
  * @param {object} element button
  * @returns {void}
@@ -468,8 +472,21 @@ function submitDiscussion(action, element) {
         $.post(
                 action + "index.php/discussionaccess/submit",
                 {"diss": discussion_text, "pid": post_id, "updated": new Date().getTime()},
-                function (response) {
+                function(response) {
                     //var resp_arr = JSON.parse(response);
                 });
     }
+}
+/**
+ * Template to show discussions.
+ * The template will be loaded dynamically.
+ */
+function generateDiscussionView() {
+    var parentContainer = $("<div class='cl-div-ediss'>");
+    $(parentContainer)
+            .append($("<p class='cl-p-discussion'>"))
+            .append($("<span class='cl-span-editdiss'>"))
+            .append($("<span class='cl-span-deletediss>"))
+            .append($("<span class='cl-span-dissid'>"));
+    return $(parentContainer);
 }
