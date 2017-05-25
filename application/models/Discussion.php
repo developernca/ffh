@@ -31,10 +31,10 @@ class Discussion extends CI_Model {
     }
 
     /**
-     * Insert new record in discussions table. 
+     * Insert new record in discussions table.
      * Generate unique id and unique file name for discussion text.
      * Write discussion to text.
-     * 
+     *
      * @param type $data user submitted form data
      * @return mixed return submitted data on success or null on failure
      */
@@ -64,6 +64,11 @@ class Discussion extends CI_Model {
         // insert
         $insert_success = $this->db->insert(Constant::TABLE_DISCUSSIONS, $values);
         if ($insert_success) {
+            // get user name
+            $this->db->select(Constant::TABLE_ACCOUNTS_COLUMN_NAME);
+            $name = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ID => $this->posted_user])->result_array();
+            $values[Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY] = $name[0][Constant::TABLE_ACCOUNTS_COLUMN_NAME];
+            // get file contents
             $values[Constant::TABLE_DISCUSSION_COLUMN_FILENAME] = auto_link(nl2br(file_get_contents($filename)), 'url', TRUE);
             return $values;
         } else {
@@ -77,6 +82,8 @@ class Discussion extends CI_Model {
         $path = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [Constant::TABLE_DISCUSSION_COLUMN_ID => $data['pid']])->result_array();
         // write data to file
         $write_success = write_file($path[0][Constant::TABLE_DISCUSSION_COLUMN_FILENAME], $data['discussion']);
+        // format discussion text
+        $data["discussion"] = auto_link(nl2br($data["discussion"]), 'url', TRUE);
         if ($write_success) {
             $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY, $this->posted_user);
             $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_ID, $data['pid']);
