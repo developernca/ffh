@@ -151,6 +151,7 @@ class Post extends CI_Model {
      */
     public function get_all_posts($limit, $start) {
         $this->db->limit($limit, $start);
+        $this->db->order_by(Constant::TABLE_POSTS_COLUMN_UPDATED_TIME, 'DESC');
         $query = $this->db->get(Constant::TABLE_POSTS);
         $result = $query->result_array();
         if (is_null($result) || empty($result)) {

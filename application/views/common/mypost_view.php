@@ -53,7 +53,7 @@ echo form_dropdown([
     'id' => 'id-select-type',
     'class' => 'cl-select-large',
     'name' => Constant::NAME_SELECT_POST_TYPE,
-        ], ${Constant::VDN_POST_TYPES_OPTIONS});
+    ], ${Constant::VDN_POST_TYPES_OPTIONS});
 echo '<br/>';
 echo form_input([
     'type' => 'button',
@@ -106,9 +106,9 @@ if (!is_null($post_list)) {
         // post id
         echo sprintf('<span name=%s class="cl-span-epid" style="display:none;">%s</span>', Constant::NAME_HIDDEN_POST_ID, $row[Constant::TABLE_POSTS_COLUMN_ID]);
         // edit
-        echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="postEditClick(this);" />&#9998;</button>';
+        echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="postEditClick(this);">&#9998;</button>';
         // delete
-        echo sprintf('<button class="cl-btn-small cl-btn-epdelbtn" onclick="postDeleteClick(this,\'%s\');" />&#10007;</button>', base_url());
+        echo sprintf('<button class="cl-btn-small cl-btn-epdelbtn" onclick="postDeleteClick(this,\'%s\');">&#10007;</button>', base_url());
         // post type
         echo sprintf('<span class="cl-span-posttype" value="%s"/>Type : %s</span>', array_search($row[Constant::TABLE_POSTS_COLUMN_TYPE], ${Constant::VDN_POST_TYPES_OPTIONS}), $row[Constant::TABLE_POSTS_COLUMN_TYPE]);
         echo '<br />';

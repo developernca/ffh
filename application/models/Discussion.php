@@ -2,7 +2,7 @@
 
 class Discussion extends CI_Model {
 
-    private $posted_userr;
+    private $posted_user;
     private $base_path;
 
     public function __construct() {
@@ -58,6 +58,7 @@ class Discussion extends CI_Model {
             Constant::TABLE_POSTS_COLUMN_ID => $diss_id,
             Constant::TABLE_DISCUSSION_COLUMN_FILENAME => $filename,
             Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY => $this->posted_user,
+            Constant::TABLE_DISCUSSION_COLUMN_UPDATEDAT => $data['updated_at'],
             Constant::TABLE_DISCUSSION_COLUMN_POST_ID => $data['pid']
         ];
         // insert
@@ -65,6 +66,24 @@ class Discussion extends CI_Model {
         if ($insert_success) {
             $values[Constant::TABLE_DISCUSSION_COLUMN_FILENAME] = auto_link(nl2br(file_get_contents($filename)), 'url', TRUE);
             return $values;
+        } else {
+            return NULL;
+        }
+    }
+
+    public function update_disscussion_by_id($data) {
+        // get file name of current updated post
+        $this->db->select(Constant::TABLE_DISCUSSION_COLUMN_FILENAME);
+        $path = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [Constant::TABLE_DISCUSSION_COLUMN_ID => $data['pid']])->result_array();
+        // write data to file
+        $write_success = write_file($path[0][Constant::TABLE_DISCUSSION_COLUMN_FILENAME], $data['discussion']);
+        if ($write_success) {
+            $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY, $this->posted_user);
+            $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_ID, $data['pid']);
+            $result = $this->db->update(Constant::TABLE_DISCUSSIONS, [
+                Constant::TABLE_DISCUSSION_COLUMN_UPDATEDAT => $data['updated_at']
+            ]);
+            return $result ? $data : NULL;
         } else {
             return NULL;
         }

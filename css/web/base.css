@@ -185,6 +185,7 @@ body{
 
 .cl-p-epcontent a{
     text-decoration: none;
+    padding: 0px;
 }
 
 .cl-p-eptitle{
@@ -255,16 +256,59 @@ body{
     resize: none;
     width: 80%;
 }
-/* discussion submit button */
-.cl-btn-dissubmit{
+/* discussion crud button */
+.cl-span-changediss{
     border: none;
     color: #0000FF;
     text-decoration: underline;
-    font-size: x-small;
+    font-size: small;
     background-color: transparent;
     font-family: sans-serif;
 }
 
 .cl-btn-dissubmit:hover{
     cursor: pointer;
+}
+
+/* Discussions */
+.cl-p-discussion{
+    background: #FFFFFF;
+    font-size: smaller;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    height: 100px;
+    overflow: auto;
+    padding-left: 5px;
+    width: 80%;
+}
+
+.cl-span-dissubmit{
+    margin-left: 5px;
+}
+
+.cl-p-discussion a{
+    text-decoration: none;
+    font-size: smaller;
+    padding: 0px;
+}
+
+.cl-span-changediss:hover{
+    cursor: pointer;
+}
+
+/* discussion edit */
+.cl-span-editdiss{
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #0000FF;
+}
+/* discussion delete */
+.cl-span-deldiss{
+    color: #FF0000;
+}
+
+/* discussion info discussed user and time */
+.cl-span-dissinfo{
+    font-size: x-small;
+    margin-left: 5px;
 }

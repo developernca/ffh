@@ -85,6 +85,7 @@ class Constant {
     const TABLE_DISCUSSION_COLUMN_ID = '_id';
     const TABLE_DISCUSSION_COLUMN_FILENAME = 'filename';
     const TABLE_DISCUSSION_COLUMN_DISCUSSEDBY = 'discussed_by';
+    const TABLE_DISCUSSION_COLUMN_UPDATEDAT = 'updated_at';
     const TABLE_DISCUSSION_COLUMN_POST_ID = 'post_id';
     // =============== VIEW DATA KEY NAME ===================
     const VDN_POST_TYPES_OPTIONS = 'vdn_post_types_options';

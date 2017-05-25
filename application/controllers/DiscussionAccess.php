@@ -49,6 +49,7 @@ class DiscussionAccess extends MY_Controller {
     }
 
     public function get($post_id) {
+        $this->authenticate();
         $discussion_list = $this->discussion->get_diss_by_postid($post_id);
         if (!is_null($discussion_list)) {
             exit(json_encode([
@@ -59,6 +60,23 @@ class DiscussionAccess extends MY_Controller {
             exit(json_encode([
                 'flg' => FALSE
             ]));
+        }
+    }
+
+    /**
+     * 
+     * @param type $data
+     */
+    public function edit() {
+        $this->authenticate();
+        $result = $this->discussion->update_disscussion_by_id($this->input->post());
+        if (!is_null($result)) {
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $result
+            ]));
+        } else {
+            exit(json_encode(['flg' => false]));
         }
     }
 
