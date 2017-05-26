@@ -112,7 +112,24 @@ body{
     font-style: italic;
 }
 
-/*cpcontainer - create post container*/
+/* Info view tags */
+
+#id-div-infoview{
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+#id-span-cu{
+    font-size: x-large;
+}
+
+#id-span-disschange{
+    font-size: xx-large;
+    margin-left: 20px;
+    color: #FFFFFF;
+}
+
+/* cpcontainer - create post container */
 .cl-div-postcontainer{
     display: inline-block;
     background: #C0C0C0;
@@ -240,9 +257,16 @@ body{
 .cl-span-showdiss:hover{
     cursor: pointer;
 }
+
+/* Pagination links */
+.cl-p-paginationlinks{
+    margin: 0px;
+}
+
 .cl-p-paginationlinks strong,a{
     text-decoration: underline;
     font-size: larger;
+    margin: 0px;
     padding: 10px;
 }
 

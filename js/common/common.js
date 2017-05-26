@@ -8,10 +8,21 @@ var edit_container = null;
  */
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-$(window).on("load", function() {
+$(window).on("load", function () {
     setPostUpdatedTime();
     navChange();
+    //setInterval(listenDiscussionChange, 2500);
 });
+
+function listenDiscussionChange() {
+    var action = "http://localhost:8012/ffh/";
+    $.get(
+            action + "index.php/mypost/get_post_notification"
+            , null
+            , function (response) {
+                console.log(response);
+            });
+}
 
 /**
  * change current link to green color and black text
@@ -35,6 +46,11 @@ function navChange() {
     }
 }
 
+/**
+ * Change all time [span] to readable format.
+ * 
+ * @returns {void}
+ */
 function setPostUpdatedTime() {
     var postedTimeSpan = $(".cl-span-posttime");
     var spanLength = postedTimeSpan.length;
@@ -71,7 +87,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -99,7 +115,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function(response) {
+            function (response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -159,7 +175,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -185,7 +201,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -238,7 +254,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -313,7 +329,7 @@ function postDeleteClick(element, action) {
         $.post(
                 action + "index.php/mypost/delete/" + _id,
                 null,
-                function(response) {
+                function (response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) {
                         $(parent_container).remove();
@@ -334,7 +350,7 @@ function submitEditPost(action) {
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function(response) {
+            function (response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -396,7 +412,7 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function() {
+    setTimeout(function () {
         $(id).fadeOut();
     }, 3500);
 }
@@ -418,7 +434,7 @@ function showDiscussion(element, action) {
         $.post(
                 action + "index.php/discussionaccess/get/" + $(parent).find(".cl-span-epid").text(),
                 null,
-                function(response) {
+                function (response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                         var data = resp_arr["msg"];
@@ -454,14 +470,14 @@ function dissEditClick(element, action) {
     $(dissEditForm).find(".cl-textarea-discussion").val($(currentDiss).find(".cl-p-discussion").text());
     $(currentDiss).replaceWith($(dissEditForm));
     // submit click
-    $(dissEditForm).find(".cl-span-dissubmit").on("click", function() {
+    $(dissEditForm).find(".cl-span-dissubmit").on("click", function () {
         var discussion_text = $(dissEditForm).find(".cl-textarea-discussion").val();
         if (discussion_text !== "") {// work only if there is a text in discussion
             var pid = $(currentDiss).find(".cl-span-dissid").text();
             $.post(
                     action + "index.php/discussionaccess/edit",
                     {"discussion": discussion_text, "pid": pid, "updated_at": new Date().getTime()},
-                    function(response) {
+                    function (response) {
                         var resp_arr = JSON.parse(response);
                         if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                             data = resp_arr["msg"];
@@ -481,7 +497,7 @@ function dissEditClick(element, action) {
         }
     });
     // cancel click
-    $(dissEditForm).find(".cl-span-disscancel").on("click", function() {
+    $(dissEditForm).find(".cl-span-disscancel").on("click", function () {
         $(dissEditForm).replaceWith($(currentDiss));
         dissEditForm = null;
         currentDiss = null;
@@ -549,7 +565,7 @@ function submitDiscussion(action, element) {
         $.post(
                 action + "index.php/discussionaccess/submit",
                 {"diss": discussion_text, "pid": post_id, "updated_at": new Date().getTime()},
-                function(response) {
+                function (response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                         var data = resp_arr["msg"];

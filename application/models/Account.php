@@ -43,7 +43,7 @@ class Account extends CI_Model {
             , Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code];
         $insert_success = $this->db->insert(Constant::TABLE_ACCOUNTS, $values);
         if ($insert_success) {
-            return ['activation_code' => $activation_code, 'id' => $usr_id];
+            return ['activation_code' => $activation_code, 'id' => $usr_id, 'name' => $usr_name];
         } else {
             return null;
         }
@@ -98,14 +98,14 @@ class Account extends CI_Model {
      *
      * @param string $email submitted sign in form email
      * @param string $password submitted sign in form password
-     * @return mixed return null if email and password did not match, _id otherwise
+     * @return mixed return null if email and password did not match, otherwise return account _id, name
      */
     public function is_signin_correct($email, $password) {
         $this->db->select(Constant::TABLE_ACCOUNTS_COLUMN_PASSWORD);
         $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email]);
         $result = $query->result_array();
         if (count($result) == 1) { // password matching
-            return password_verify($password, $result[0][Constant::TABLE_ACCOUNTS_COLUMN_PASSWORD]) ? $this->get_acc_by_email($email, [Constant::TABLE_ACCOUNTS_COLUMN_ID]) : NULL;
+            return password_verify($password, $result[0][Constant::TABLE_ACCOUNTS_COLUMN_PASSWORD]) ? $this->get_acc_by_email($email, [Constant::TABLE_ACCOUNTS_COLUMN_ID, Constant::TABLE_ACCOUNTS_COLUMN_NAME]) : NULL;
         } else { // email did not match
             return NULL;
         }
@@ -115,7 +115,7 @@ class Account extends CI_Model {
         $this->db->select(implode(',', $column));
         $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email]);
         $result = $query->result_array();
-        return $result[0][Constant::TABLE_ACCOUNTS_COLUMN_ID];
+        return $result[0];
     }
 
 }

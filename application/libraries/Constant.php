@@ -13,6 +13,7 @@ class Constant {
     const MY_POST_VIEW = 'mypost_view';
     const SESSION_USSID = 'sussid';
     const SESSION_EMAIL = 'email';
+    const SESSION_CURRENTUSER_NAME = 'cu_name';
     // ===== AUTHANTICATION CODE =====
     const AUTH_ALREADY_LOGIN = 'alr_lgin'; // already logged in [authentication OK]
     const AUTH_SESSION_NOT_EXIST = 'no_sess'; // session not exist 

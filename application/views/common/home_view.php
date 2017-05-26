@@ -1,6 +1,5 @@
 <?php
 
-echo '<br/>';
 // =========== begin current users post list ================
 $post_list = ${Constant::VDN_ALL_POSTS};
 if (!is_null($post_list)) {

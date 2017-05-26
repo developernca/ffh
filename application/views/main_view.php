@@ -29,9 +29,11 @@
                 $this->load->view('common/' . $view);
             } else if ($view === Constant::HOME_VIEW) {
                 $this->load->view('common/nav_view');
+                $this->load->view('common/info_view');
                 $this->load->view('common/' . $view);
             } else if ($view === Constant::MY_POST_VIEW) {
                 $this->load->view('common/nav_view');
+                $this->load->view('common/info_view');
                 $this->load->view('common/' . $view);
             }
             ?> 

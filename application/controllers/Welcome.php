@@ -48,6 +48,7 @@ class Welcome extends MY_Controller {
             $this->session->set_userdata([
                 Constant::SESSION_USSID => $result['id']
                 , Constant::SESSION_EMAIL => $email
+                , Constant::SESSION_CURRENTUSER_NAME => $result['name']
             ]);
             $this->send_activation_mail($email, $result['activation_code']);
             exit(json_encode([
@@ -73,7 +74,8 @@ class Welcome extends MY_Controller {
             if (!is_null($signin_success)) {
                 // set session data
                 $this->session->set_userdata([
-                    Constant::SESSION_USSID => $signin_success
+                    Constant::SESSION_USSID => $signin_success[Constant::TABLE_ACCOUNTS_COLUMN_ID]
+                    , Constant::SESSION_CURRENTUSER_NAME => $signin_success[Constant::TABLE_ACCOUNTS_COLUMN_NAME]
                     , Constant::SESSION_EMAIL => $this->input->post(Constant::NAME_TEXT_SIGNIN_FORM_EMAIL)
                 ]);
                 exit(json_encode(['flg' => 0, 'action' => base_url() . 'index.php/home']));

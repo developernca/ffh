@@ -1,6 +1,5 @@
 <?php
 
-echo '<br/>';
 // =========== begin create post container ============
 echo '<div id = "id-div-cpcontainer" class = "cl-div-postcontainer">';
 // =========== end create post form ===================
@@ -74,15 +73,11 @@ echo '<p id="id-p-createposterr" class="cl-p-createposterr"></p>';
 // =========== end create post form ===================
 echo '</div>';
 // =========== end create post container ==================
-//
-//
-//
-//
-//
-//
-//
-//
-// =========== begin current users post list ================
+//                                                       // 
+//                                                       //
+//                                                       //
+// =========== begin current users post list ==============
+// =========== begin notification for discussion ==========
 $post_list = ${Constant::VDN_CURRENTUSER_POST_LISTS};
 if (!is_null($post_list)) {
     // pagination links

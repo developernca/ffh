@@ -57,6 +57,15 @@ class MyPost extends MY_Controller {
         ]);
     }
 
+    public function get_post_notification() {
+        if (!$this->input->is_ajax_request()) {
+            redirect(base_url());
+            exit();
+        }
+        $this->authenticate();
+        exit(json_encode(['flg' => "Just test"]));
+    }
+
     /**
      * When user submit a post, validate post and if there is no input error, 
      * save to database, otherwise show error to user.
