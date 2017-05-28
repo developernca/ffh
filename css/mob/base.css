@@ -1,4 +1,4 @@
-/* 
+/*
     Created on : Apr 8, 2017, 10:56:14 PM
     Author     : nyeinchanaung
 */
@@ -17,7 +17,7 @@ body{
     text-align: center;
     background: #1FDA9A;
     font-weight: bolder;
-    font-size: 4em; 
+    font-size: 4em;
 }
 #id-div-maincontainer{
     background: lightgray;
@@ -92,7 +92,7 @@ body{
 #id-div-navcontainer{
     display: inline-block;
     text-align: center;
-    width: 60%;    
+    width: 60%;
 }
 
 #id-div-navcontainer p{
@@ -126,80 +126,60 @@ body{
 
 #id-ul-navlinkcontainer li a{
     display: block;
+    font-size: 1em;
     color: #FFFFFF;
     text-decoration: none;
 }
 
-#id-ul-navlinkcontainer li:hover{
-    cursor: pointer;    
-    font-style: italic;
-}
-
 /*cpcontainer - create post container*/
 #id-div-cpcontainer{
-    display: inline-block;
+    display: block;
     background: #C0C0C0;
     border-radius: 10px;
-    box-shadow: 5px 4px #FFFFFF;
-    width: 70%;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 5px 10px 5px;
+    border: 1px solid #1FDA9A;
+}
+
+/* postcontainer - each post container */
+.cl-div-postcontainer{
+    display: block;
+    background: #C0C0C0;
+    border-radius: 10px;
+    text-align: left;
+    padding-left: 15px;
+    padding-top: 15px;
+    margin: 10px 5px 10px 5px;
+    border: 1px solid #1FDA9A;
+}
+
+/* Optional 3 itmes table - email, phone, remark */
+.cl-div-postcontainer table{
+    font-size: 2em;
 }
 
 #id-textarea-postcontent{
-    width: 90%;
+    width: 99%;
     border-radius: 10px;
     resize: vertical;
+    font-size: 3.2em;
     margin-top: 15px;
+    resize: vertical;
 }
 
-#id-span-cpimg{
-    float: left;
-    margin-left: 30px;
-    margin-top: 5px;
-    maring-bottom: 5px;
-}
-
-#id-span-cpimg img:hover{
-    cursor: pointer;
-}
-
-#id-span-delimg{
+#id-label-posttype{
+    display: inline-block;
     font-size: xx-large;
-    color: #FF0000;
-    float: right;
-    margin-right: 30px;
-    margin-top: 5px;
     margin-bottom: 5px;
-}
-
-#id-span-delimg img:hover{
-    cursor: pointer;
 }
 
 .cl-select-large{
     background-color:#27AE60;
-    font-size: xx-large;
-    color:white;
-    padding:12px;
-    border-radius:3px;
-    font-size:16px;
+    font-size: 5em;
+    color: white;
+    padding: 12px;
+    border-radius: 3px;
     vertical-align: text-bottom;
-    margin-bottom: 1px;
-}
-
-#id-span-allowdis{
-    padding-top: 10px;
-    display: block;
-    clear: both;
-    margin-left: 25px;
-    text-align: left;
-}
-
-#id-chkbox-allowdis{
-    vertical-align: middle;
-    width: 30px;
-    height: 30px;
+    margin-bottom: 5px;
 }
 
 .cl-text-small{
@@ -211,11 +191,172 @@ body{
     margin-bottom: 5px;
     display: inline;
 }
+cl-select-large{
+    background-color:#27AE60;
+    color:white;
+    padding:12px;
+    border-radius:3px;
+    font-size:16px;
+    vertical-align: middle;
+    margin-bottom: 1px;
+}
 
-#id-text-keyword{
+.cl-p-createposterr{
+    display: none;
+    font-weight: bolder;
+    display: none;
+    color: #FF0000;
+    font-size: medium;
+}
+
+.cl-p-epcontent{
+    margin-right: 3px;
+    background: #FFFFFF;
+    font-size: 2em;
+    padding: 5px 5px 5px 10px;
+    border-left: 3px solid green;
+}
+
+.cl-p-epcontent a{
+    text-decoration: none;
+    padding: 0px;
+}
+
+.cl-p-eptitle{
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+.cl-btn-small{
+    background-color: #1FDA9A;
+    font-size: x-large;
+    font-weight: bolder;
+    border-radius: 0px;
+    text-align: center;
+    padding: 5px;
+    border: 0px;
+}
+.cl-btn-epedtbtn{
+    color: #0000FF;
+    font-size: 3.5em;
+    margin-right: 20px;
+    margin-bottom: 15px;
+    float: right;
+}
+
+.cl-btn-epdelbtn{
+    margin-right: 15px;
+    margin-bottom: 15px;
+    font-size: 3.5em;
+    color: #FF0000;
+    float: right;
+}
+
+.cl-span-posttype{
+    display: inline-block;
+    margin-top: 10px;
+    font-size: xx-large;
+    font-style: italic;
+    color: #0000FF;
+}
+
+/* post update time span */
+.cl-span-posttime{
+    font-size: xx-small;
+    display: none;
+}
+/* posted user */
+.cl-span-postedby{
+    font-size: xx-small;
+    margin-left: 10px;
+    font-weight: bolder;
+}
+/* show comment span */
+.cl-span-showdiss{
+    display: inline-block;
+    font-size: xx-large;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.cl-span-showdiss:hover{
+    cursor: pointer;
+}
+
+/* Pagination links */
+.cl-p-paginationlinks{
+    margin: 0px;
+}
+
+.cl-p-paginationlinks strong,a{
+    text-decoration: underline;
+    font-size: xx-large;
+    margin: 0px;
+    padding: 10px;
+}
+
+/* div for discussions */
+.cl-div-disscontainer{
+    margin: 5px 0px 10px 0px;
+}
+
+/*discussion textarea*/
+.cl-textarea-discussion{
+    resize: none;
+    width: 80%;
+}
+/* discussion crud button */
+.cl-span-changediss{
+    border: none;
+    color: #0000FF;
+    text-decoration: underline;
+    font-size: small;
+    background-color: transparent;
+    font-family: sans-serif;
+}
+
+.cl-btn-dissubmit:hover{
+    cursor: pointer;
+}
+
+/* Discussions */
+.cl-p-discussion{
+    background: #FFFFFF;
+    font-size: smaller;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    height: 100px;
+    overflow: auto;
+    padding-left: 5px;
+    width: 80%;
+}
+
+.cl-span-dissubmit{
     margin-left: 5px;
 }
 
-#id-label-keywordchar{
+.cl-p-discussion a{
+    text-decoration: none;
     font-size: smaller;
+    padding: 0px;
+}
+
+.cl-span-changediss:hover{
+    cursor: pointer;
+}
+
+/* discussion edit */
+.cl-span-editdiss{
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #0000FF;
+}
+/* discussion delete */
+.cl-span-deldiss{
+    color: #FF0000;
+}
+
+/* discussion info discussed user and time */
+.cl-span-dissinfo{
+    font-size: x-small;
+    margin-left: 5px;
 }

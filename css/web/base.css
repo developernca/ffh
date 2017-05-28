@@ -123,11 +123,16 @@ body{
     font-size: x-large;
 }
 
-#id-span-disschange{
+/* Discussion change notification bell */
+#id-span-disschangebell{
     font-size: xx-large;
     margin-left: 20px;
     color: #FFFFFF;
 }
+#id-span-disschangebell:hover{
+    cursor: pointer;
+}
+
 
 /* cpcontainer - create post container */
 .cl-div-postcontainer{
@@ -149,30 +154,6 @@ body{
     resize: vertical;
     margin-top: 15px;
     font-size: x-large;
-}
-
-#id-span-cpimg{
-    float: left;
-    margin-left: 30px;
-    margin-top: 5px;
-    maring-bottom: 5px;
-}
-
-#id-span-cpimg img:hover{
-    cursor: pointer;
-}
-
-#id-span-delimg{
-    font-size: xx-large;
-    color: #FF0000;
-    float: right;
-    margin-right: 30px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-#id-span-delimg img:hover{
-    cursor: pointer;
 }
 
 .cl-select-large{
@@ -246,7 +227,12 @@ body{
     font-size: xx-small;
     display: none;
 }
-
+/* posted user */
+.cl-span-postedby{
+    font-size: xx-small;
+    margin-left: 10px;
+    font-weight: bolder;
+}
 /* show comment span */
 .cl-span-showdiss{
     display: inline-block;

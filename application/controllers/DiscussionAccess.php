@@ -54,7 +54,8 @@ class DiscussionAccess extends MY_Controller {
         if (!is_null($discussion_list)) {
             exit(json_encode([
                 'flg' => TRUE,
-                'msg' => $discussion_list
+                'msg' => $discussion_list,
+                'cu' => $this->session->userdata(Constant::SESSION_USSID)
             ]));
         } else {
             exit(json_encode([
@@ -64,7 +65,7 @@ class DiscussionAccess extends MY_Controller {
     }
 
     /**
-     * 
+     *
      * @param type $data
      */
     public function edit() {
@@ -78,6 +79,15 @@ class DiscussionAccess extends MY_Controller {
         } else {
             exit(json_encode(['flg' => false]));
         }
+    }
+
+    /**
+     * post delete
+     *
+     * @param type $dss_id
+     */
+    public function delete($dss_id) {
+        $this->authenticate();
     }
 
 }

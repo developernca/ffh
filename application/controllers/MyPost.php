@@ -7,20 +7,20 @@ class MyPost extends MY_Controller {
     }
 
     /**
-     * 
+     *
      * @return type
      */
     protected function authenticate() {
         $authentication_flag = parent::authenticate();
         if ($authentication_flag === Constant::AUTH_ACTIVATION_REQUIRED) {
             ($this->input->is_ajax_request()) ?
-                    exit(json_encode(['flg' => TRUE, 'action' => base_url() . 'index.php/confirmation'])) :
-                    redirect(base_url() . 'index.php/confirmation');
+                            exit(json_encode(['flg' => TRUE, 'action' => base_url() . 'index.php/confirmation'])) :
+                            redirect(base_url() . 'index.php/confirmation');
             exit();
         } else if ($authentication_flag === Constant::AUTH_SESSION_NOT_EXIST) {
             ($this->input->is_ajax_request()) ?
-                    exit(json_encode(['flg' => TRUE, 'action' => base_url()])) :
-                    redirect(base_url());
+                            exit(json_encode(['flg' => TRUE, 'action' => base_url()])) :
+                            redirect(base_url());
             exit();
         } else if ($authentication_flag === Constant::AUTH_ALREADY_LOGIN) {
             return;
@@ -29,7 +29,7 @@ class MyPost extends MY_Controller {
 
     /**
      * Default index function for this controller
-     * 
+     *
      */
     public function index() {
         $this->authenticate();
@@ -50,7 +50,7 @@ class MyPost extends MY_Controller {
         sort($post_type);
         // load view
         $this->load_view(
-            Constant::MY_POST_VIEW, [
+                Constant::MY_POST_VIEW, [
             Constant::VDN_POST_TYPES_OPTIONS => $post_type,
             Constant::VDN_CURRENTUSER_POST_LISTS => $currentuser_post_list,
             Constant::VDN_PAGINATION_LINK => $this->pagination->create_links()
@@ -67,7 +67,7 @@ class MyPost extends MY_Controller {
     }
 
     /**
-     * When user submit a post, validate post and if there is no input error, 
+     * When user submit a post, validate post and if there is no input error,
      * save to database, otherwise show error to user.
      */
     public function submit() {
@@ -80,6 +80,7 @@ class MyPost extends MY_Controller {
             ]));
         }
         // get currently inserted post
+
         $inserted_post = $this->post->insert_post($this->input->post());
         if (!is_null($inserted_post)) {
             exit(json_encode([
@@ -126,7 +127,7 @@ class MyPost extends MY_Controller {
     /**
      * Delete post request. The function call can only be
      * ajax request. If not so, redirect to home page.
-     * 
+     *
      * @param String $post_id Post id to delete
      */
     public function delete($post_id) {
@@ -143,7 +144,7 @@ class MyPost extends MY_Controller {
 
     /**
      * validate input form on post creation and updating.
-     * 
+     *
      * @return mixed string when error occur, null on success
      */
     private function validate_post() {

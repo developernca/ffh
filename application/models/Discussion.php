@@ -11,6 +11,12 @@ class Discussion extends CI_Model {
         $this->base_path = FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $this->posted_user . DIRECTORY_SEPARATOR; // ffh/usr/usr_id/
     }
 
+    /**
+     * Get discussions by post id
+     *
+     * @param string $post_id post id
+     * @return mixed result set array or null on failure
+     */
     public function get_diss_by_postid($post_id) {
         $this->db->select('accounts.name ,discussions.*');
         $this->db->join(Constant::TABLE_ACCOUNTS, 'accounts._id = discussions.discussed_by');
@@ -24,7 +30,6 @@ class Discussion extends CI_Model {
             for ($col = 0; $col < $resultLength; $col++) {
                 $file_contents = nl2br(file_get_contents($result[$col][Constant::TABLE_DISCUSSION_COLUMN_FILENAME]));
                 $result[$col][Constant::TABLE_DISCUSSION_COLUMN_FILENAME] = auto_link($file_contents, 'url', TRUE);
-                unset($result[$col][Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY]); // unset discussed user id
             }
             return $result;
         }
@@ -76,17 +81,27 @@ class Discussion extends CI_Model {
         }
     }
 
+    /**
+     * Update discussion.
+     *
+     * @param array $data values to update
+     * @return mixed return updated values array or null on failure
+     */
     public function update_disscussion_by_id($data) {
         // get file name of current updated post
         $this->db->select(Constant::TABLE_DISCUSSION_COLUMN_FILENAME);
-        $path = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [Constant::TABLE_DISCUSSION_COLUMN_ID => $data['pid']])->result_array();
-        // write data to file
-        $write_success = write_file($path[0][Constant::TABLE_DISCUSSION_COLUMN_FILENAME], $data['discussion']);
-        // format discussion text
-        $data["discussion"] = auto_link(nl2br($data["discussion"]), 'url', TRUE);
+        $path = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [Constant::TABLE_DISCUSSION_COLUMN_ID => $data['diss_id'], Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY => $this->posted_user])->result_array();
+        if (!is_null($path) && !empty($path)) { // work only if flie path is not null
+            // write data to file
+            $write_success = write_file($path[0][Constant::TABLE_DISCUSSION_COLUMN_FILENAME], $data['discussion']);
+        } else {
+            return NULL;
+        }
         if ($write_success) {
+            // format discussion text
+            $data["discussion"] = auto_link(nl2br($data["discussion"]), 'url', TRUE);
             $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY, $this->posted_user);
-            $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_ID, $data['pid']);
+            $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_ID, $data['diss_id']);
             $result = $this->db->update(Constant::TABLE_DISCUSSIONS, [
                 Constant::TABLE_DISCUSSION_COLUMN_UPDATEDAT => $data['updated_at']
             ]);
@@ -94,6 +109,16 @@ class Discussion extends CI_Model {
         } else {
             return NULL;
         }
+    }
+
+    /**
+     * Delete a discussion.
+     *
+     * @param string $id discussion id
+     * @return boolean true on success, false on failure
+     */
+    function delete_discussion_by_id($id) {
+
     }
 
 }

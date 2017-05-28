@@ -52,7 +52,7 @@ echo form_dropdown([
     'id' => 'id-select-type',
     'class' => 'cl-select-large',
     'name' => Constant::NAME_SELECT_POST_TYPE,
-    ], ${Constant::VDN_POST_TYPES_OPTIONS});
+        ], ${Constant::VDN_POST_TYPES_OPTIONS});
 echo '<br/>';
 echo form_input([
     'type' => 'button',
@@ -73,12 +73,8 @@ echo '<p id="id-p-createposterr" class="cl-p-createposterr"></p>';
 // =========== end create post form ===================
 echo '</div>';
 // =========== end create post container ==================
-//                                                       // 
-//                                                       //
-//                                                       //
-// =========== begin current users post list ==============
-// =========== begin notification for discussion ==========
-$post_list = ${Constant::VDN_CURRENTUSER_POST_LISTS};
+// =========== begin current users post list ================
+$post_list = ${Constant::VDN_ALL_POSTS};
 if (!is_null($post_list)) {
     // pagination links
     echo sprintf('<p class="cl-p-paginationlinks">%s</p>', ${Constant::VDN_PAGINATION_LINK});
@@ -87,6 +83,12 @@ if (!is_null($post_list)) {
         echo '<p class="cl-p-eptitle">' . $row[Constant::TABLE_POSTS_COLUMN_POST_TITLE] . '</p>';
         // post updated time
         echo sprintf('<span class="cl-span-posttime">%s</span>', $row[Constant::TABLE_POSTS_COLUMN_UPDATED_TIME]);
+        // posted user, if the post is updated by current user show you, name otherwise
+        if ($row[Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID] == $this->session->userdata(Constant::SESSION_USSID)) {
+            echo sprintf('<span class="cl-span-postedby">%s</span>', 'Your post');
+        } else {
+            echo sprintf('<span class="cl-span-postedby">%s</span>', $row[Constant::TABLE_ACCOUNTS_COLUMN_NAME]);
+        }
         echo '<p class="cl-p-epcontent">' . $row[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] . '</p>';
         if (!is_null($row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE])) {
             $this->table->add_row('Contact Phone', '<span class="cl-span-epcontactphone">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE] . '</span>');
@@ -100,10 +102,13 @@ if (!is_null($post_list)) {
         }
         // post id
         echo sprintf('<span name=%s class="cl-span-epid" style="display:none;">%s</span>', Constant::NAME_HIDDEN_POST_ID, $row[Constant::TABLE_POSTS_COLUMN_ID]);
-        // edit
-        echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="postEditClick(this);">&#9998;</button>';
-        // delete
-        echo sprintf('<button class="cl-btn-small cl-btn-epdelbtn" onclick="postDeleteClick(this,\'%s\');">&#10007;</button>', base_url());
+        // Edit and delete button is shown only if the post is the current user post
+        if ($row[Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID] == $this->session->userdata(Constant::SESSION_USSID)) {
+            // edit
+            echo '<button class="cl-btn-small cl-btn-epedtbtn" onclick="postEditClick(this);" />&#9998;</button>';
+            // delete
+            echo sprintf('<button class="cl-btn-small cl-btn-epdelbtn" onclick="postDeleteClick(this,\'%s\');" />&#10007;</button>', base_url());
+        }
         // post type
         echo sprintf('<span class="cl-span-posttype" value="%s"/>Type : %s</span>', array_search($row[Constant::TABLE_POSTS_COLUMN_TYPE], ${Constant::VDN_POST_TYPES_OPTIONS}), $row[Constant::TABLE_POSTS_COLUMN_TYPE]);
         echo '<br />';
@@ -114,5 +119,6 @@ if (!is_null($post_list)) {
     // pagination links
     echo sprintf('<p class="cl-p-paginationlinks">%s</p>', ${Constant::VDN_PAGINATION_LINK});
 }
-
 // =========== end current users post list ================
+// =================== Total post count ===================
+echo sprintf('<p>Total %s posts.</p>', number_format(${Constant::VDN_TOTAL_POSTS_COUNT}));

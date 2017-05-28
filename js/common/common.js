@@ -8,20 +8,20 @@ var edit_container = null;
  */
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-$(window).on("load", function () {
+$(window).on("load", function() {
     setPostUpdatedTime();
     navChange();
-    //setInterval(listenDiscussionChange, 2500);
 });
 
-function listenDiscussionChange() {
-    var action = "http://localhost:8012/ffh/";
-    $.get(
-            action + "index.php/mypost/get_post_notification"
-            , null
-            , function (response) {
-                console.log(response);
-            });
+function listenDiscussionChange(action) {
+//    setInterval(function() {
+//        $.get(
+//                action + "index.php/mypost/get_post_notification"
+//                , null
+//                , function(response) {
+//                    console.log(response);
+//                });
+//    }, 3000);
 }
 
 /**
@@ -48,7 +48,7 @@ function navChange() {
 
 /**
  * Change all time [span] to readable format.
- * 
+ *
  * @returns {void}
  */
 function setPostUpdatedTime() {
@@ -87,7 +87,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -115,7 +115,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function (response) {
+            function(response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -175,7 +175,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -201,11 +201,12 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
                 } else if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) { // clear
+                    console.log(resp_arr);
                     // post data
                     var pdata = resp_arr["msg"];
                     // create a container div
@@ -235,17 +236,34 @@ function submitPost(action) {
                     }
                     // add row when there is at least one raw
                     if (rowCount > 0) {
-                        pcontainer.append(table);
+                        pcontainer.append($(table));
                     } else {
                         table = null;
                     }
+                    // post type and discussion text
+                    var post_type = $("<span class='cl-span-posttype' value=''>");
+                    $(post_type).text("Type : " + pdata["type"]);
+                    $(post_type).attr("value", pdata["type_num"]);
+                    var showdiss_text = $("<span class='cl-span-showdiss' value='0' appended='0' onclick=showDiscussion(this,\'" + action + "\');>");
+                    $(showdiss_text).text("Show discussion");
+                    pcontainer.append($(post_type));
+                    pcontainer.append($("<br />"));
+                    pcontainer.append($(showdiss_text));
+                    // set post id - pid
+                    var pid = $("<span name='pid' class='cl-span-epid' style='display:none;'>" + pdata["_id"] + "</span>");
+                    pcontainer.append($(pid));
                     // edit button
                     var edt_btn = $("<button class='cl-btn-small cl-btn-epedtbtn' onclick='postEditClick(this)';>&#9998;</button>");
-                    var del_btn = $("<button class='cl-btn-small cl-btn-epdelbtn' onclick='post_delete_clik(this);'>&#10007;</button>");
+                    var del_btn = $("<button class='cl-btn-small cl-btn-epdelbtn' onclick=postDeleteClick(this,\'" + action + "\');>&#10007;</button>");
                     // delete button
-                    pcontainer.append(edt_btn);
-                    pcontainer.append(del_btn);
-                    pcontainer.insertAfter($("#id-div-cpcontainer"));
+                    pcontainer.append($(edt_btn));
+                    pcontainer.append($(del_btn));
+                    var pagination_link = $("#id-div-cpcontainer").find("cl-p-paginationlinks");
+                    if (pagination_link === null) {
+                        pcontainer.insertAfter($("#id-div-cpcontainer"));
+                    } else {
+                        pcontainer.insertAfter($("#id-div-cpcontainer").next());
+                    }
                     // reset data in post create form
                     document.getElementById("id-form-createpost").reset();
                     // scroll to current posted div
@@ -254,7 +272,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -287,6 +305,7 @@ function postEditClick(element) {
     $(edit_container).find("#id-text-contactphone").val($(original_container).find(".cl-span-epcontactphone").text());
     $(edit_container).find("#id-text-remark").val($(original_container).find(".cl-span-epremark").text());
     var edit_btn = $(edit_container).find("#id-btn-submitpost");
+    console.log(edit_btn);
     $(edit_btn).val("Edit");// Change button test
     var edit_btn_funcname = $(edit_btn).attr("onclick");// get onclick event function name
     edit_btn_funcname = edit_btn_funcname.toString().replace("submitPost", "submitEditPost");// change function name
@@ -329,7 +348,8 @@ function postDeleteClick(element, action) {
         $.post(
                 action + "index.php/mypost/delete/" + _id,
                 null,
-                function (response) {
+                function(response) {
+                    console.log(response);
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) {
                         $(parent_container).remove();
@@ -350,7 +370,7 @@ function submitEditPost(action) {
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -412,7 +432,7 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function () {
+    setTimeout(function() {
         $(id).fadeOut();
     }, 3500);
 }
@@ -434,17 +454,25 @@ function showDiscussion(element, action) {
         $.post(
                 action + "index.php/discussionaccess/get/" + $(parent).find(".cl-span-epid").text(),
                 null,
-                function (response) {
+                function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                         var data = resp_arr["msg"];
+                        var cu_id = resp_arr["cu"];// current user id
                         var data_length = data.length;
                         for (var i = 0; i < data_length; i++) {
                             var view = generateDiscussionView();
                             $(view).find(".cl-p-discussion").html(data[i]["filename"]);
-                            $(view).find(".cl-span-editdiss").attr("onclick", "dissEditClick(this,\'" + action + "\')");
-                            $(view).find(".cl-span-deldiss").attr("onclick", "dissDelClick(this,\'" + action + "\')");
-                            $(view).find(".cl-span-dissinfo").text("Discussed by - " + data[i]["name"] + " - at - " + getFormattedTime(data[i]['updated_at']));
+                            // show only if the discussion is posted by current user
+                            if (data[i]["discussed_by"] === cu_id) {
+                                $(view).find(".cl-span-editdiss").attr("onclick", "dissEditClick(this,\'" + action + "\')");
+                                $(view).find(".cl-span-deldiss").attr("onclick", "dissDelClick(this,\'" + action + "\')");
+                                $(view).find(".cl-span-dissinfo").text("Discussed by - You - at - " + getFormattedTime(data[i]['updated_at']));
+                            } else {
+                                $(view).find(".cl-span-editdiss").remove();
+                                $(view).find(".cl-span-deldiss").remove();
+                                $(view).find(".cl-span-dissinfo").text("Discussed by - " + data[i]["name"] + " - at - " + getFormattedTime(data[i]['updated_at']));
+                            }
                             $(view).find(".cl-span-dissid").text(data[i]["_id"]);
                             $(parent).find(".cl-div-disscontainer").append($(view));
                         }
@@ -454,6 +482,42 @@ function showDiscussion(element, action) {
         $(parent).find(".cl-div-disscontainer").hide();
         $(showDissText).attr("value", "0");// set value to 0, (0 is hide, toggle click will show div)
         $(showDissText).text("Show discussions");
+    }
+}
+
+/**
+ * Create a discussion.
+ *
+ * @param {string} action base url
+ * @param {object} element button
+ * @returns {void}
+ */
+function submitDiscussion(action, element) {
+    // get top most parent container of the current post which is div-postcontainer
+    var parent = $(element).parent().parent();
+    var discussion_text = $(parent).find(".cl-textarea-discussion").val();
+    var post_id = $(parent).find(".cl-span-epid").text();
+    if (discussion_text !== "") {
+        $.post(
+                action + "index.php/discussionaccess/submit",
+                {"diss": discussion_text, "pid": post_id, "updated_at": new Date().getTime()},
+                function(response) {
+                    var resp_arr = JSON.parse(response);
+                    if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
+                        console.log(resp_arr);
+                        var data = resp_arr["msg"];
+                        var diss_view = generateDiscussionView();
+                        $(diss_view).find(".cl-span-editdiss").attr("onclick", "dissEditClick(this,\'" + action + "\')");
+                        $(diss_view).find(".cl-span-deldiss").attr("onclick", "dissDelClick(this,\'" + action + "\')");
+                        $(diss_view).find(".cl-p-discussion").html(data["filename"]);
+                        $(diss_view).find(".cl-span-dissinfo").text("Discussed by " + data["discussed_by"] + " -at- " + getFormattedTime(data["updated_at"]));
+                        $(diss_view).find(".cl-span-dissid").text(data["_id"]);
+                        var disscontainer = $(parent).find(".cl-div-disscontainer");
+                        $(disscontainer).append(diss_view);
+                        // clear discussion text area
+                        $(parent).find(".cl-textarea-discussion").val("");
+                    }
+                });
     }
 }
 
@@ -470,14 +534,15 @@ function dissEditClick(element, action) {
     $(dissEditForm).find(".cl-textarea-discussion").val($(currentDiss).find(".cl-p-discussion").text());
     $(currentDiss).replaceWith($(dissEditForm));
     // submit click
-    $(dissEditForm).find(".cl-span-dissubmit").on("click", function () {
+    $(dissEditForm).find(".cl-span-dissubmit").on("click", function() {
         var discussion_text = $(dissEditForm).find(".cl-textarea-discussion").val();
         if (discussion_text !== "") {// work only if there is a text in discussion
-            var pid = $(currentDiss).find(".cl-span-dissid").text();
+            var diss_id = $(currentDiss).find(".cl-span-dissid").text();
             $.post(
                     action + "index.php/discussionaccess/edit",
-                    {"discussion": discussion_text, "pid": pid, "updated_at": new Date().getTime()},
-                    function (response) {
+                    {"discussion": discussion_text, "diss_id": diss_id, "updated_at": new Date().getTime()},
+                    function(response) {
+                        console.log(response);
                         var resp_arr = JSON.parse(response);
                         if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                             data = resp_arr["msg"];
@@ -490,14 +555,16 @@ function dissEditClick(element, action) {
                             info = name + " at - " + time;
                             $(info_span).text(info);
                             $(dissEditForm).replaceWith($(currentDiss));
-                            dissEditForm = null;
-                            currentDiss = null;
+                        } else {
+                            $(dissEditForm).replaceWith($(currentDiss));
                         }
+                        dissEditForm = null;
+                        currentDiss = null;
                     });
         }
     });
     // cancel click
-    $(dissEditForm).find(".cl-span-disscancel").on("click", function () {
+    $(dissEditForm).find(".cl-span-disscancel").on("click", function() {
         $(dissEditForm).replaceWith($(currentDiss));
         dissEditForm = null;
         currentDiss = null;
@@ -505,7 +572,29 @@ function dissEditClick(element, action) {
 }
 
 function dissDelClick(element, action) {
+    var parent = $(element).parent();// get current discussion - [cl-div-ediss]
+    var did = $(parent).find(".cl-span-dissid");// discussion id
+    $.post(
+            action + "index.php/discussionaccess/delete/" + did
+            , null
+            , function(response) {
+                console.log(response);
+            });
+}
 
+/**
+ * Template to show discussions.
+ * The template will be loaded dynamically.
+ */
+function generateDiscussionView() {
+    var parentContainer = $("<div class='cl-div-ediss'>");
+    $(parentContainer)
+            .append($("<p class='cl-p-discussion'>"))
+            .append($("<span class='cl-accessable cl-span-changediss cl-span-editdiss'>&#9998;</span>"))
+            .append($("<span class='cl-accessable cl-span-changediss cl-span-deldiss'>&#10007;</span>"))
+            .append($("<span class='cl-span-dissinfo'>"))
+            .append($("<span class='cl-span-dissid' style='display: none;'>"));
+    return $(parentContainer);
 }
 
 /**
@@ -531,51 +620,6 @@ function generateDiscussionForm(action, create_mode = true) {
         $(container_div).append($(cancel_button));
     }
     return $(container_div);
-}
-
-/**
- * Template to show discussions.
- * The template will be loaded dynamically.
- */
-function generateDiscussionView() {
-    var parentContainer = $("<div class='cl-div-ediss'>");
-    $(parentContainer)
-            .append($("<p class='cl-p-discussion'>"))
-            .append($("<span class='cl-accessable cl-span-changediss cl-span-editdiss'>&#9998;</span>"))
-            .append($("<span class='cl-accessable cl-span-changediss cl-span-deldiss'>&#10007;</span>"))
-            .append($("<span class='cl-span-dissinfo'>"))
-            .append($("<span class='cl-span-dissid' style='display: none;'>"));
-    return $(parentContainer);
-}
-
-
-/**
- * Create a discussion.
- *
- * @param {string} action base url
- * @param {object} element button
- * @returns {void}
- */
-function submitDiscussion(action, element) {
-    // get top most parent container of the current post which is div-postcontainer
-    var parent = $(element).parent().parent();
-    var discussion_text = $(parent).find(".cl-textarea-discussion").val();
-    var post_id = $(parent).find(".cl-span-epid").text();
-    if (discussion_text !== "") {
-        $.post(
-                action + "index.php/discussionaccess/submit",
-                {"diss": discussion_text, "pid": post_id, "updated_at": new Date().getTime()},
-                function (response) {
-                    var resp_arr = JSON.parse(response);
-                    if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
-                        var data = resp_arr["msg"];
-                        var diss_view = generateDiscussionView();
-                        $(diss_view).find(".cl-p-discussion").text(data["filename"]);
-                        $(diss_view).find(".cl-span-dissinfo").text("Discussed by " + data["discussed_by"] + " -at- " + getFormattedTime(data["updated_at"]));
-                        $(parent).append($(diss_view));
-                    }
-                });
-    }
 }
 
 /**

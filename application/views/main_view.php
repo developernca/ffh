@@ -19,7 +19,11 @@
         ?>
         <title><?php echo 'XXX'; ?></title>
     </head>
-    <body>
+    <?php
+    // set base url to use in javascript
+    $disschange_listener_function = 'listenDiscussionChange(\'' . base_url() . '\')';
+    ?>
+    <body onload="<?php echo $disschange_listener_function; ?>">
         <div id="id-div-maincontainer">
             <?php
             $this->load->view(Constant::HEADER_VIEW);
@@ -30,13 +34,13 @@
             } else if ($view === Constant::HOME_VIEW) {
                 $this->load->view('common/nav_view');
                 $this->load->view('common/info_view');
-                $this->load->view('common/' . $view);
+                ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
             } else if ($view === Constant::MY_POST_VIEW) {
                 $this->load->view('common/nav_view');
                 $this->load->view('common/info_view');
-                $this->load->view('common/' . $view);
+                ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
             }
-            ?> 
+            ?>
         </div>
     </body>
 </html>
