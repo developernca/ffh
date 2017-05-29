@@ -23,12 +23,7 @@ class Account extends CI_Model {
         mkdir(FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $usr_id);
 
         // generate activation code
-        $activation_code = '';
-        do {
-            $activation_code = KeyGenerator::getAlphaNumString(6);
-            $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code]);
-            $result = $query->result();
-        } while (!empty($result));
+        $activation_code = $this->generate_unique_actvcode();
 
         $hashed_password = password_hash($data[Constant::NAME_PASS_SIGNUP_FORM_PASSWORD], PASSWORD_DEFAULT);
         $usr_name = explode('@', $data[Constant::NAME_TEXT_SIGNUP_FORM_EMAIL]);
@@ -50,15 +45,16 @@ class Account extends CI_Model {
     }
 
     /**
-     * Test whether sign up email already exist.
+     * Test whether email already exist.
      * 
      * @param type $email sign up form email
      * @return boolean true if email exist, false otherwise
      */
     public function is_email_exist($email) {
+        $this->db->select(Constant::TABLE_ACCOUNTS_COLUMN_EMAIL);
         $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email]);
         $result = $query->result();
-        return empty($result) ? FALSE : TRUE;
+        return !empty($result);
     }
 
     /**
@@ -83,9 +79,11 @@ class Account extends CI_Model {
      * @return mixed 
      */
     public function activate_account($id, $email, $code) {
-        $this->db->where(Constant::TABLE_ACCOUNTS_COLUMN_ID, $id);
-        $this->db->where(Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE, $code);
-        $result = $this->db->update(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_IS_ACTIVATED => TRUE]);
+        $result = $this->db->update(Constant::TABLE_ACCOUNTS, [
+            Constant::TABLE_ACCOUNTS_COLUMN_IS_ACTIVATED => TRUE], [
+            Constant::TABLE_ACCOUNTS_COLUMN_ID => $id,
+            Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $code
+        ]);
         if ($result) {
             return $this->is_activated($id, $email);
         } else {
@@ -111,11 +109,71 @@ class Account extends CI_Model {
         }
     }
 
+    /**
+     * Update account activation code by id.
+     * 
+     * @param type $id id to search
+     * @return mixed new activation code on success, NULL on failure
+     */
+    public function update_activation_code_by_id($id) {
+        $activation_code = $this->generate_unique_actvcode();
+        $update_success = $this->db->update(Constant::TABLE_ACCOUNTS, [
+            Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code
+            ], [
+            Constant::TABLE_ACCOUNTS_COLUMN_ID => $id
+        ]);
+        return $update_success ? $activation_code : NULL;
+    }
+
+    /**
+     * Update email and activation code of the current user.
+     * 
+     * @param type $email email to update
+     * @param type $acc_id account id
+     * @return mixed return activation code or NULL on failure
+     */
+    public function update_email_by_id($email, $acc_id) {
+        // splited email from @ sign to use as name
+        $splited_email = explode("@", $email);
+        $activation_code = $this->generate_unique_actvcode();
+        $update_success = $this->db->update(Constant::TABLE_ACCOUNTS, [
+            Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email,
+            Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code,
+            Constant::TABLE_ACCOUNTS_COLUMN_NAME => $splited_email[0]
+            ], [
+            Constant::TABLE_ACCOUNTS_COLUMN_ID => $acc_id
+        ]);
+        return $update_success ? $activation_code : NULL;
+    }
+
+    /**
+     * Get user data by email.
+     * 
+     * @param type $email email to check
+     * @param array $column columns to retrieve
+     * @return array result set array
+     */
     private function get_acc_by_email($email, array $column = null) {
         $this->db->select(implode(',', $column));
         $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email]);
         $result = $query->result_array();
         return $result[0];
+    }
+
+    /**
+     * Generate unique activation code in case of register and 
+     * resending activation code.
+     * 
+     * @return String unique activation code
+     */
+    private function generate_unique_actvcode() {
+        $activation_code = '';
+        do {
+            $activation_code = KeyGenerator::getAlphaNumString(6);
+            $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code]);
+            $result = $query->result();
+        } while (!empty($result));
+        return $activation_code;
     }
 
 }

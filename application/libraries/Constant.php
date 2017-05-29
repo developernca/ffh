@@ -56,7 +56,9 @@ class Constant {
     const NAME_HIDDEN_POST_ID = 'pid';
     // name for select field
     const NAME_SELECT_POST_TYPE = 'type';
-    // database table and column name
+    // link param name
+    const LINK_PARAM_RESEND_CONCODE = 'rscc';
+    // ============== DATABSE TABLES AND COLUMN NAME ==============
     // ACCOUNTS TABLE
     const TABLE_ACCOUNTS = 'accounts';
     const TABLE_ACCOUNTS_COLUMN_ID = '_id';

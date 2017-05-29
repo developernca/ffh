@@ -3,7 +3,7 @@
 class Confirmation extends MY_Controller {
 
     public function __construct() {
-        parent::__construct(['html', 'form'], ['constant', 'session'], ['account']);
+        parent::__construct(['html', 'form'], ['form_validation', 'constant', 'keygenerator', 'session'], ['account']);
     }
 
     /**
@@ -76,6 +76,63 @@ class Confirmation extends MY_Controller {
         }
     }
 
+    /**
+     * Resend activatin code to user eamil.
+     */
+    public function resend_code() {
+        $this->authenticate();
+        $updated_code = $this->account->update_activation_code_by_id($this->session->userdata(Constant::SESSION_USSID));
+        if (!is_null($updated_code)) {// send activation code to user mail
+            // $this->send_activation_mail($this->session->userdata(Constant::SESSION_EMAIL), $updated_code);
+        }
+        $this->load_view(Constant::CONFIRMATION_VIEW, [
+            Constant::VDN_SESSION_EMAIL => $this->session->userdata(Constant::SESSION_EMAIL),
+            Constant::LINK_PARAM_RESEND_CONCODE => $updated_code
+        ]);
+    }
+
+    /**
+     * Change email.
+     */
+    public function change_email() {
+        $this->authenticate();
+        if (!$this->input->is_ajax_request()) {
+            redirect(base_url());
+        }
+        $this->form_validation->set_rules(Constant::NAME_TEXT_RESEND_EMAIL, '', 'required|valid_email', ['required' => Constant::ERR_EMAIL_BLANK, 'valid_email' => Constant::ERR_EMAIL_FORMAT]);
+        if (!$this->form_validation->run()) {
+            exit(json_encode([
+                'flg' => FALSE,
+                'msg' => strip_tags(validation_errors())
+            ]));
+        }
+        $post_data = $this->input->post();
+        $email = $post_data[Constant::NAME_TEXT_RESEND_EMAIL];
+        if ($this->account->is_email_exist($email)) {
+            exit(json_encode([
+                'flg' => FALSE,
+                'msg' => Constant::ERR_SIGNUP_EMAIL_EXIST
+            ]));
+        }
+        $updated_result = $this->account->update_email_by_id($email, $this->session->userdata(Constant::SESSION_USSID));
+        if (is_null($updated_result)) {
+            exit(json_encode([
+                'flg' => FALSE,
+                'msg' => 'Unexcepted error occured. Please, refresh page and try again.'
+            ]));
+        } else {
+            // $this->send_activation_mail($email, $updated_result);
+            $this->session->set_userdata([Constant::SESSION_EMAIL => $email]);
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $email
+            ]));
+        }
+    }
+
+    /**
+     * @override
+     */
     public function signout() {
         parent::signout();
     }

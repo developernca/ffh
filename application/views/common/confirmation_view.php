@@ -6,9 +6,22 @@ echo anchor(base_url() . 'index.php/confirmation/signout', 'Sign Out', ['class' 
 echo '</p>';
 // =========== CONFIRM ===========
 echo '<div class="cl-div-confirmation" id="id-div-confirm">'; // begin confirmation div
-
-echo '<p id="id-p-csinfo">A 6 digits activation code was sent to,</p>';
-echo sprintf('<p style="color: #0000FF;"> %s </p>', ${Constant::VDN_SESSION_EMAIL});
+//
+// confirmation code sent/resent to email alert
+if (isset(${Constant::LINK_PARAM_RESEND_CONCODE})) { // code regenerating
+    if (!is_null(${Constant::LINK_PARAM_RESEND_CONCODE})) {
+        // regenerating success
+        echo '<p id="id-p-csinfo">Activation code resent to,</p>';
+        echo sprintf('<p style="color: #0000FF;"> %s </p>', ${Constant::VDN_SESSION_EMAIL});
+    } else {
+        // regenerating failure
+        echo '<p id="id-p-csinfo">Sorry, something went wrong.</p>';
+        echo sprintf('<p style="color: #0000FF;"> %s </p>', 'Please, try again!');
+    }
+} else { // normal case
+    echo '<p id="id-p-csinfo">A 6 digits activation code was sent to,</p>';
+    echo sprintf('<p style="color: #0000FF;"> %s </p>', ${Constant::VDN_SESSION_EMAIL});
+}
 
 echo '<form id="id-form-actvcode">';
 
@@ -24,14 +37,14 @@ echo '<br />';
 
 echo form_input([
     'type' => 'button',
-    'class' => 'cl-btn-medium',
+    'class' => 'cl-accessable cl-btn-medium',
     'id' => 'id-btn-activation',
     'onclick' => 'sendActcode(\'' . base_url() . '\');'
     ], 'Activate');
 
 echo '</form>';
 
-echo anchor('#', 'Did not receive code? Resend code...', ['id' => 'id-link-rscode']);
+echo anchor(base_url() . 'index.php/confirmation/resend_code/' . Constant::LINK_PARAM_RESEND_CONCODE, 'Did not receive code? Resend code...', ['id' => 'id-link-rscode', 'class' => 'cl-accessable']);
 
 echo '</div>'; // end of confirmation div
 
@@ -41,7 +54,7 @@ echo '<br />';
 
 echo '<div class="cl-div-confirmation" id="id-div-mresend">'; // begin email resend div
 
-echo '<p id="id-p-iminfo">Enter invalid email address?</p>';
+echo '<p id="id-p-iminfo">Enter wrong email address?</p>';
 
 echo '<form id="id-form-remail">';
 
@@ -57,13 +70,13 @@ echo '<br />';
 
 echo form_input([
     'type' => 'button',
-    'class' => 'cl-btn-medium',
+    'class' => 'cl-accessable cl-btn-medium',
     'id' => 'id-btn-remail',
-    'onclick' => 'resend_email(this);'
+    'onclick' => 'changeEmail(\'' . base_url() . '\') '
     ], 'Send');
 
 echo '</form>';
-
+echo '<p id="id-p-cmerror" class="cl-error-small" ></p>';
 echo '</div>'; // end of email resend div
 
 echo '</div>';
