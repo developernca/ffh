@@ -122,9 +122,8 @@ body{
     display: inline-block;
     text-decoration: none;
     padding: 5px;
-    box-shadow: 2px 2px;
+    box-shadow: 2px 4px 10px 1px;
     font-size: x-large;
-    background: #1FDA9A;
 
 }
 #id-ul-infoview li:hover{
@@ -149,7 +148,7 @@ body{
 }
 
 #id-ul-dissnoti li{
-    
+
 }
 
 /* cpcontainer - create and each post container */
