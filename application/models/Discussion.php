@@ -118,7 +118,25 @@ class Discussion extends CI_Model {
      * @return boolean true on success, false on failure
      */
     function delete_discussion_by_id($id) {
-
+        $this->db->trans_begin();
+        // get file path to delete content file
+        $this->db->select(Constant::TABLE_DISCUSSION_COLUMN_FILENAME);
+        $path = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [
+                Constant::TABLE_DISCUSSION_COLUMN_ID => $id])->result_array();
+        // delete table data
+        $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_ID, $id);
+        $db_del_success = $this->db->delete(Constant::TABLE_DISCUSSIONS);
+        if (!$db_del_success) {
+            return FALSE;
+        }
+        // delete file
+        $file_del_success = unlink($path[0][Constant::TABLE_DISCUSSION_COLUMN_FILENAME]);
+        if (!$file_del_success) {
+            $this->db->trans_rollback();
+            return FALSE;
+        }
+        $this->db->trans_commit();
+        return TRUE;
     }
 
 }

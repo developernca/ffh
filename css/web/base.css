@@ -114,13 +114,22 @@ body{
 
 /* Info view tags */
 
-#id-div-infoview{
-    margin-top: 10px;
-    margin-bottom: 0px;
+#id-ul-infoview{
+    display: inline-block;
+    padding: 0px;
 }
-
-#id-span-cu{
+#id-ul-infoview li{
+    display: inline-block;
+    text-decoration: none;
+    padding: 5px;
+    box-shadow: 2px 2px;
     font-size: x-large;
+    background: #1FDA9A;
+
+}
+#id-ul-infoview li:hover{
+    cursor: pointer;
+    box-shadow: 2px 2px 0px 1px;
 }
 
 /* Discussion change notification bell */
@@ -133,8 +142,17 @@ body{
     cursor: pointer;
 }
 
+/* Discussion change noti list */
+#id-ul-dissnoti{
+    position: absolute;
+    z-index: 100;
+}
 
-/* cpcontainer - create post container */
+#id-ul-dissnoti li{
+    
+}
+
+/* cpcontainer - create and each post container */
 .cl-div-postcontainer{
     display: inline-block;
     background: #C0C0C0;

@@ -1,6 +1,9 @@
 <?php
 
-echo '<div id="id-div-infoview">';
-echo sprintf('<span id="id-span-cu">%s</span>', $this->session->userdata(Constant::SESSION_CURRENTUSER_NAME)); // cu means current users
-echo '<span id="id-span-disschangebell">&#128276;</span>'; // disscussion change listener
-echo '</div>';
+echo '<br/>';
+$info_list = [
+    $this->session->userdata(Constant::SESSION_CURRENTUSER_NAME),
+    '&#128276;'
+];
+echo ul($info_list, ['id' => 'id-ul-infoview']);
+echo '<br/>';

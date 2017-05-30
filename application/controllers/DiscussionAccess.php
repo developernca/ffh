@@ -82,12 +82,21 @@ class DiscussionAccess extends MY_Controller {
     }
 
     /**
-     * post delete
+     * Discussion delete request.
      *
-     * @param type $dss_id
+     * @param type $dss_id discussion id to delete
      */
-    public function delete($dss_id) {
+    public function delete($diss_id) {
         $this->authenticate();
+        if ($this->discussion->delete_discussion_by_id($diss_id)) { // successfully deleted
+            exit(json_encode([
+                'flg' => TRUE
+            ]));
+        } else {
+            exit(json_encode([
+                'flg' => FALSE
+            ]));
+        }
     }
 
 }

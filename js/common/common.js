@@ -605,15 +605,30 @@ function dissEditClick(element, action) {
     });
 }
 
+/**
+ * Discussion delete button click event.
+ * 
+ * @param {object} element clicked element
+ * @param {string} action base_url
+ * @returns {void}
+ */
 function dissDelClick(element, action) {
-    var parent = $(element).parent();// get current discussion - [cl-div-ediss]
-    var did = $(parent).find(".cl-span-dissid");// discussion id
-    $.post(
-            action + "index.php/discussionaccess/delete/" + did
-            , null
-            , function (response) {
-                console.log(response);
-            });
+    var confirm_delete = confirm("Are you sure to delete this discussion?");
+    if (confirm_delete) {
+        var parent = $(element).parent();// get current discussion - [cl-div-ediss]
+        var did = $(parent).find(".cl-span-dissid").text();// discussion id
+        $.post(
+                action + "index.php/discussionaccess/delete/" + did
+                , null
+                , function (response) {
+                    var resp_arr = JSON.parse(response);
+                    if (resp_arr["flg"]) { // delete success
+                        $(parent).remove();
+                    } else { // delete failure
+                        
+                    }
+                });
+    }
 }
 
 /**
