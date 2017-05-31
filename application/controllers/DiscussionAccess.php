@@ -25,9 +25,9 @@ class DiscussionAccess extends MY_Controller {
         }
         $authentication_flag = parent::authenticate();
         if ($authentication_flag === Constant::AUTH_ACTIVATION_REQUIRED) {
-            exit(json_encode(['flg' => TRUE, 'action' => base_url() . 'index.php/confirmation']));
+            exit(json_encode(['flg' => FALSE, 'action' => base_url() . 'index.php/confirmation']));
         } else if ($authentication_flag === Constant::AUTH_SESSION_NOT_EXIST) {
-            exit(json_encode(['flg' => TRUE, 'action' => base_url()]));
+            exit(json_encode(['flg' => FALSE, 'action' => base_url()]));
         } else if ($authentication_flag === Constant::AUTH_ALREADY_LOGIN) {
             return;
         }
@@ -56,6 +56,21 @@ class DiscussionAccess extends MY_Controller {
                 'flg' => TRUE,
                 'msg' => $discussion_list,
                 'cu' => $this->session->userdata(Constant::SESSION_USSID)
+            ]));
+        } else {
+            exit(json_encode([
+                'flg' => FALSE
+            ]));
+        }
+    }
+
+    public function get_unseen() {
+        $this->authenticate();
+        $result = $this->discussion->get_unseen_discussions();
+        if (!is_null($result)) {
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $result
             ]));
         } else {
             exit(json_encode([

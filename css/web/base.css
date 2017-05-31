@@ -131,6 +131,44 @@ body{
     box-shadow: 2px 2px 0px 1px;
 }
 
+/* Discussion notification list ul-li-p */
+#id-ul-notilist{
+    width: 30%;
+    padding: 0px;
+    margin-left: 0px;
+    background: lightgray;
+    box-shadow: 2px 4px 10px 1px;
+}
+
+
+#id-ul-notilist li{
+    list-style: none;
+    diaplay: inline-block;
+    border-bottom: 2px solid #FFFFFF;
+}
+
+#id-ul-notilist li:hover{
+    cursor: pointer;
+    box-shadow: 2px 4px 10px 1px;
+}
+
+#id-span-noticount{
+    font-weight: bolder;
+    font-size: medium;
+    color: #FF0000;
+}
+
+.cl-p-noti{
+    text-align: left;
+    padding-left: 10px;
+    margin: 0px;
+}
+
+.cl-p-notititle{
+    font-weight: bolder;
+    font-size: medium;
+}
+
 /* Discussion change notification bell */
 #id-span-disschangebell{
     font-size: xx-large;

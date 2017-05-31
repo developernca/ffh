@@ -14,13 +14,13 @@ class MyPost extends MY_Controller {
         $authentication_flag = parent::authenticate();
         if ($authentication_flag === Constant::AUTH_ACTIVATION_REQUIRED) {
             ($this->input->is_ajax_request()) ?
-                            exit(json_encode(['flg' => TRUE, 'action' => base_url() . 'index.php/confirmation'])) :
-                            redirect(base_url() . 'index.php/confirmation');
+                    exit(json_encode(['flg' => TRUE, 'action' => base_url() . 'index.php/confirmation'])) :
+                    redirect(base_url() . 'index.php/confirmation');
             exit();
         } else if ($authentication_flag === Constant::AUTH_SESSION_NOT_EXIST) {
             ($this->input->is_ajax_request()) ?
-                            exit(json_encode(['flg' => TRUE, 'action' => base_url()])) :
-                            redirect(base_url());
+                    exit(json_encode(['flg' => TRUE, 'action' => base_url()])) :
+                    redirect(base_url());
             exit();
         } else if ($authentication_flag === Constant::AUTH_ALREADY_LOGIN) {
             return;
@@ -50,20 +50,11 @@ class MyPost extends MY_Controller {
         sort($post_type);
         // load view
         $this->load_view(
-                Constant::MY_POST_VIEW, [
+            Constant::MY_POST_VIEW, [
             Constant::VDN_POST_TYPES_OPTIONS => $post_type,
             Constant::VDN_CURRENTUSER_POST_LISTS => $currentuser_post_list,
             Constant::VDN_PAGINATION_LINK => $this->pagination->create_links()
         ]);
-    }
-
-    public function get_post_notification() {
-        if (!$this->input->is_ajax_request()) {
-            redirect(base_url());
-            exit();
-        }
-        $this->authenticate();
-        exit(json_encode(['flg' => "Just test"]));
     }
 
     /**
