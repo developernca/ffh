@@ -11,6 +11,8 @@ class Constant {
     const CONFIRMATION_VIEW = 'confirmation_view';
     const HOME_VIEW = 'home_view';
     const MY_POST_VIEW = 'mypost_view';
+    const EACH_POST_VIEW = 'each_post_view';
+    // ===== Session name constants =====
     const SESSION_USSID = 'sussid';
     const SESSION_EMAIL = 'email';
     const SESSION_CURRENTUSER_NAME = 'cu_name';
@@ -98,6 +100,8 @@ class Constant {
     const VDN_PAGINATION_LINK = 'links';
     const VDN_SESSION_EMAIL = 'vdn_email';
     const VDN_TOTAL_POSTS_COUNT = 'total_post_counts';
+    const VDN_EACH_POST = 'each_post';
+    const VDN_DISCUSSION_LIST = 'discussion_list';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array

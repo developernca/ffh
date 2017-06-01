@@ -31,15 +31,24 @@
                 $this->load->view('common/' . $view);
             } else if ($view === Constant::CONFIRMATION_VIEW) {
                 $this->load->view('common/' . $view);
-            } else if ($view === Constant::HOME_VIEW) {
-                $this->load->view('common/nav_view');
-                $this->load->view('common/info_view');
-                ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
-            } else if ($view === Constant::MY_POST_VIEW) {
+            } else {
                 $this->load->view('common/nav_view');
                 $this->load->view('common/info_view');
                 ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
             }
+//            else if ($view === Constant::HOME_VIEW) {
+//                $this->load->view('common/nav_view');
+//                $this->load->view('common/info_view');
+//                ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
+//            } else if ($view === Constant::MY_POST_VIEW) {
+//                $this->load->view('common/nav_view');
+//                $this->load->view('common/info_view');
+//                ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
+//            } else if ($view === Constant::EACH_POST_VIEW) {
+//                $this->load->view('common/nav_view');
+//                $this->load->view('common/info_view');
+//                ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
+//            }
             ?>
         </div>
     </body>

@@ -99,9 +99,8 @@ class Post extends CI_Model {
     }
 
     /**
-     *
-
      * Get post by posted user.
+     * 
      * @param String $id account_id of desired user
      * @param int $limit row limit for pagination
      * @param int $start pointer for start row
@@ -123,6 +122,24 @@ class Post extends CI_Model {
                 $file_contents = nl2br(file_get_contents($result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]));
                 $result[$col][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link($file_contents, 'url', TRUE); // unset post_text_file_name and set file content
             }
+            return $result;
+        }
+    }
+
+    /**
+     * Get post by id. Since getting by id the result will be only one post.
+     * So, there is no pagination.
+     * 
+     * @param type $id post id to search
+     * @return mixed return result set array or null
+     */
+    public function get_post_by_id($id) {
+        $result = $this->db->get_where(Constant::TABLE_POSTS, [Constant::TABLE_POSTS_COLUMN_ID => $id])->result_array();
+        if (is_null($result) || empty($result)) {
+            return NULL;
+        } else {
+            $file_contents = nl2br(file_get_contents($result[0][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]));
+            $result[0][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link($file_contents, 'url', TRUE);
             return $result;
         }
     }
