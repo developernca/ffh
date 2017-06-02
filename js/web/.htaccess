@@ -1,5 +1,5 @@
 Deny from all
-<Files "base.js">
+<Files "epv.js">
     Allow from all
 </Files>
-ErrorDocument 403 http://localhost/kjb/
+ErrorDocument 403 http://localhost:8012/ffh/

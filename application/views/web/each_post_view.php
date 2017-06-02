@@ -2,6 +2,7 @@
 
 // result set data row -> [0][post_title, post_text, etc, ...]
 $row = ${Constant::VDN_EACH_POST}[0];
+// ==================== Begin post conatiner ==============================
 echo '<div class="cl-div-postcontainer">';
 echo '<p class="cl-p-eptitle">' . $row[Constant::TABLE_POSTS_COLUMN_POST_TITLE] . '</p>';
 // post updated time
@@ -35,3 +36,24 @@ if ($row[Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID] == $this->session->userdata(Co
 // post type
 echo sprintf('<span class="cl-span-posttype" value="%s"/>Type : %s</span>', array_search($row[Constant::TABLE_POSTS_COLUMN_TYPE], ${Constant::VDN_POST_TYPES_OPTIONS}), $row[Constant::TABLE_POSTS_COLUMN_TYPE]);
 echo '<br />';
+echo '</div>';
+// ==================== End post conatiner ==============================
+//
+//
+// ==================== Begin discussion list ===========================
+$discussion_lists = ${Constant::VDN_DISCUSSION_LIST_EACH};
+foreach ($discussion_lists as $value) {
+    echo '<div class="cl-div-postcontainer">';
+    echo '<div class="cl-div-ediss">';
+    echo sprintf('<p class="cl-p-discussion" status="%s">%s</p>', $value[Constant::TABLE_DISCUSSION_COLUMN_SEEN], $value[Constant::TABLE_DISCUSSION_COLUMN_FILENAME]);
+    if ($value[Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY] === $this->session->userdata(Constant::SESSION_USSID)) {
+        echo sprintf('<span class="cl-accissable cl-span-changediss cl-span-editdiss">%s</span>', '&#9998');
+        echo sprintf('<span class="cl-accissable cl-span-changediss cl-span-deldiss>%s</span>', '&#10007');
+    }
+    echo sprintf('<span class="cl-span-dissinfo" style="display:none;">Discussed by - %s - at - </span>', $value[Constant::TABLE_ACCOUNTS_COLUMN_NAME]);
+    echo sprintf('<span class="cl-temp">%s</span>', $value[Constant::TABLE_DISCUSSION_COLUMN_UPDATEDAT]);
+    echo sprintf('<span class="cl-span-dissid" style="display:none;">%s</span>', $value[Constant::TABLE_DISCUSSION_COLUMN_ID]);
+    echo '</div>';
+    echo '</div>';
+}
+// ==================== End discussion list ===========================

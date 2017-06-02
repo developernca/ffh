@@ -33,6 +33,9 @@ class DiscussionAccess extends MY_Controller {
         }
     }
 
+    /**
+     * Submit/post/insert discussion.
+     */
     public function submit() {
         $this->authenticate();
         $discussions_inserted = $this->discussion->insert_discussion($this->input->post());
@@ -48,6 +51,11 @@ class DiscussionAccess extends MY_Controller {
         }
     }
 
+    /**
+     * Get discussion of user clicked post.
+     * 
+     * @param string $post_id post id
+     */
     public function get($post_id) {
         $this->authenticate();
         $discussion_list = $this->discussion->get_diss_by_postid($post_id);
@@ -64,6 +72,10 @@ class DiscussionAccess extends MY_Controller {
         }
     }
 
+    /**
+     * Get all unseen discussions.
+     * Use in notification.
+     */
     public function get_unseen() {
         $this->authenticate();
         $result = $this->discussion->get_unseen_discussions();
@@ -80,8 +92,28 @@ class DiscussionAccess extends MY_Controller {
     }
 
     /**
-     *
-     * @param type $data
+     * Get unseen discussions count of current post, which is
+     * the post that is showing on each/post/{pid} page.
+     * 
+     * @param string $pid post id
+     */
+    public function currentpost_unseen_count($pid) {
+        $this->authenticate();
+        $diss_count = $this->discussion->get_unseen_discussions_count_by_postid($pid);
+        if ($diss_count > 0) {
+            exit(json_encode([
+                'flg' => TRUE,
+                'msg' => $diss_count
+            ]));
+        } else {
+            exit(json_encode([
+                'flg' => FALSE
+            ]));
+        }
+    }
+
+    /**
+     * Edit a post.
      */
     public function edit() {
         $this->authenticate();

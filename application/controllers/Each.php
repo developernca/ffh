@@ -37,10 +37,12 @@ class Each extends MY_Controller {
      */
     public function post($pid) {
         $this->authenticate();
+        // get post
         $post = $this->post->get_post_by_id($pid);
         if (is_null($post)) {
             redirect(base_url());
         }
+        // get discussions
         $discussion_list = $this->discussion->get_diss_by_postid($pid);
         // get and sort post type array
         $post_type = Constant::POST_TYPE_OPTIONS_ARR;
@@ -48,7 +50,7 @@ class Each extends MY_Controller {
         // load view
         $this->load_view(Constant::EACH_POST_VIEW, [
             Constant::VDN_EACH_POST => $post,
-            Constant::VDN_DISCUSSION_LIST => $discussion_list,
+            Constant::VDN_DISCUSSION_LIST_EACH => $discussion_list,
             Constant::VDN_POST_TYPES_OPTIONS => $post_type
         ]);
     }

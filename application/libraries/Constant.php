@@ -101,7 +101,7 @@ class Constant {
     const VDN_SESSION_EMAIL = 'vdn_email';
     const VDN_TOTAL_POSTS_COUNT = 'total_post_counts';
     const VDN_EACH_POST = 'each_post';
-    const VDN_DISCUSSION_LIST = 'discussion_list';
+    const VDN_DISCUSSION_LIST_EACH = 'discussion_list';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array

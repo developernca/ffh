@@ -31,21 +31,23 @@ class Discussion extends CI_Model {
                 $file_contents = nl2br(file_get_contents($result[$col][Constant::TABLE_DISCUSSION_COLUMN_FILENAME]));
                 $result[$col][Constant::TABLE_DISCUSSION_COLUMN_FILENAME] = auto_link($file_contents, 'url', TRUE);
             }
-            // Update seen status of current post to TRUE(1) only for current user
-            $update_success = $this->db->update(Constant::TABLE_DISCUSSIONS, [
-                Constant::TABLE_DISCUSSION_COLUMN_SEEN => TRUE
-                ], [
-                Constant::TABLE_DISCUSSION_COLUMN_POST_ID => $post_id,
-                Constant::TABLE_DISCUSSION_COLUMN_SEEN => FALSE,
-                Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY => $this->posted_user
-            ]);
-            return $update_success ? $result : NULL;
+            // This function restrict users from calling each/post/{post_id} if not the post owner.
+            $post_owner = $this->post->get_posteduser_by_postid($post_id);
+            if ($post_owner === $this->posted_user) {
+                // Update seen status of current post of current user to TRUE(1)
+                $update_success = $this->db->update(Constant::TABLE_DISCUSSIONS, [
+                    Constant::TABLE_DISCUSSION_COLUMN_SEEN => TRUE
+                    ], [
+                    Constant::TABLE_DISCUSSION_COLUMN_POST_ID => $post_id,
+                    Constant::TABLE_DISCUSSION_COLUMN_SEEN => FALSE
+                ]);
+            }
+            return $result;
         }
     }
 
     /**
      * Get current user's post discussions that are not yet see.
-     *
      * @return mixed result set array or NULL
      */
     public function get_unseen_discussions() {
@@ -55,13 +57,29 @@ class Discussion extends CI_Model {
         $this->db->group_by('p._id');
         $result = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [
                 'a._id' => $this->posted_user,
-                'discussions.discussed_by != ' => $this->posted_user
+                'discussions.discussed_by != ' => $this->posted_user,
+                'discussions.seen' => 0
             ])->result_array();
         if (!is_null($result) && !empty($result)) {
             return $result;
         } else {
             return NULL;
         }
+    }
+
+    /**
+     * 
+     * @param string $pid post id
+     * @return int
+     */
+    public function get_unseen_discussions_count_by_postid($pid) {
+        $this->db->where([
+            Constant::TABLE_DISCUSSION_COLUMN_POST_ID => $pid,
+            Constant::TABLE_DISCUSSION_COLUMN_SEEN => FALSE,
+            Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY . ' != ' => $this->posted_user
+        ]);
+        $this->db->from(Constant::TABLE_DISCUSSIONS);
+        return $this->db->count_all_results();
     }
 
     /**

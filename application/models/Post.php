@@ -145,6 +145,17 @@ class Post extends CI_Model {
     }
 
     /**
+     * Get posted user id by post id.
+     * 
+     * @param string $pid post id 
+     * @return mixed return posted user id as string or NULL
+     */
+    public function get_posteduser_by_postid($pid) {
+        $result = $this->db->get_where(Constant::TABLE_POSTS, [Constant::TABLE_POSTS_COLUMN_ID => $pid])->result_array();
+        return (is_null($result) || empty($result)) ? NULL : $result[0][Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID];
+    }
+
+    /**
      * Count all posts by posted user.
      *
      * @param type $id current user id, ussid

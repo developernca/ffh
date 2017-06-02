@@ -15,6 +15,9 @@
         } else {
             echo link_tag(base_url() . 'css/web/base.css');
             echo js_tag(base_url() . 'js/web/base.js');
+            if ($view === Constant::EACH_POST_VIEW) {
+                echo js_tag(base_url() . 'js/web/epv.js');
+            }
         }
         ?>
         <title><?php echo 'XXX'; ?></title>

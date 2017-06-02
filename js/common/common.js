@@ -62,7 +62,11 @@ function listenDiscussionChange(action) {
                                     generateNotiList(data);
                                     $(info_bell_li[1]).off("click");
                                     $(info_bell_li[1]).on("click", function () {
-                                        $(noti_list).show(200);
+                                        if ($("#id-ul-notilist").is(":visible")) {
+                                            $("#id-ul-notilist").hide(200);
+                                        } else {
+                                            $("#id-ul-notilist").show(200);
+                                        }
                                     });
                                 }
                             }
