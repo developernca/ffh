@@ -47,13 +47,87 @@ foreach ($discussion_lists as $value) {
     echo '<div class="cl-div-ediss">';
     echo sprintf('<p class="cl-p-discussion" status="%s">%s</p>', $value[Constant::TABLE_DISCUSSION_COLUMN_SEEN], $value[Constant::TABLE_DISCUSSION_COLUMN_FILENAME]);
     if ($value[Constant::TABLE_DISCUSSION_COLUMN_DISCUSSEDBY] === $this->session->userdata(Constant::SESSION_USSID)) {
-        echo sprintf('<span class="cl-accissable cl-span-changediss cl-span-editdiss">%s</span>', '&#9998');
-        echo sprintf('<span class="cl-accissable cl-span-changediss cl-span-deldiss>%s</span>', '&#10007');
+        echo sprintf('<span class="cl-accissable cl-span-changediss cl-span-editdiss" onclick="dissEditClick(this,\'%s\');">%s</span>', base_url(), '&#9998');
+        echo sprintf('<span class="cl-accissable cl-span-changediss cl-span-deldiss" onclick="dissDelClick(this,\'%s\');">%s</span>', base_url(), '&#10007');
     }
-    echo sprintf('<span class="cl-span-dissinfo" style="display:none;">Discussed by - %s - at - </span>', $value[Constant::TABLE_ACCOUNTS_COLUMN_NAME]);
-    echo sprintf('<span class="cl-temp">%s</span>', $value[Constant::TABLE_DISCUSSION_COLUMN_UPDATEDAT]);
+    echo sprintf('<span class="cl-span-dissinfo" style="display: none;">Discussed by - %s - at - </span>', $value[Constant::TABLE_ACCOUNTS_COLUMN_NAME]);
+    echo sprintf('<span class="cl-temp" style="display: none;" >%s</span>', $value[Constant::TABLE_DISCUSSION_COLUMN_UPDATEDAT]);
     echo sprintf('<span class="cl-span-dissid" style="display:none;">%s</span>', $value[Constant::TABLE_DISCUSSION_COLUMN_ID]);
     echo '</div>';
     echo '</div>';
 }
 // ==================== End discussion list ===========================
+// ==================== Begin hidden create post ===========================
+// =========== begin create post container ============
+echo '<div id = "id-div-cpcontainer" class = "cl-div-postcontainer" style="display:none;">';
+// =========== end create post form ===================
+echo '<form id = "id-form-createpost">';
+echo form_input([
+    'type' => 'text',
+    'id' => 'id-text-posttitle',
+    'class' => 'cl-text-medium',
+    'name' => Constant::NAME_TEXT_POST_TITLE,
+    'placeholder' => 'What kind of help do you need..',
+    'style' => 'width: 90%;'
+]);
+echo form_textarea([
+    'id' => 'id-textarea-postcontent',
+    'name' => Constant::NAME_TEXT_POST_CONTENT,
+    'rows' => 12,
+    'placeholder' => 'How can other people help you...'
+]);
+echo '<br/>';
+echo form_input([
+    'type' => 'text',
+    'id' => 'id-text-contactmail',
+    'class' => 'cl-text-medium',
+    'name' => Constant::NAME_TEXT_CONTACT_EMAIL,
+    'placeholder' => 'Contact email (optional)',
+    'style' => 'width: 55%;'
+]);
+echo '<br/>';
+echo form_input([
+    'type' => 'text',
+    'id' => 'id-text-contactphone',
+    'class' => 'cl-text-medium',
+    'name' => Constant::NAME_TEXT_CONTACT_PHONE,
+    'placeholder' => 'Contact phone (optional)',
+    'style' => 'width: 55%;'
+]);
+echo '<br/>';
+echo form_input([
+    'type' => 'text',
+    'id' => 'id-text-remark',
+    'class' => 'cl-text-medium',
+    'name' => Constant::NAME_TEXT_POST_REMARK,
+    'placeholder' => 'Remark (optional)',
+    'style' => 'width: 55%;'
+]);
+echo '<br/>';
+echo form_label('Choose type of your request : ');
+echo form_dropdown([
+    'type' => 'select',
+    'id' => 'id-select-type',
+    'class' => 'cl-select-large',
+    'name' => Constant::NAME_SELECT_POST_TYPE,
+        ], ${Constant::VDN_POST_TYPES_OPTIONS});
+echo '<br/>';
+echo form_input([
+    'type' => 'button',
+    'id' => 'id-btn-submitpost',
+    'class' => 'cl-btn-medium cl-common-hover',
+    'value' => 'Submit',
+    'onclick' => 'submitPost(\'' . base_url() . '\');'
+]);
+echo form_input([
+    'type' => 'hidden',
+    'id' => 'id-hidden-createdat',
+    'name' => Constant::NAME_HIDDEN_POST_CREATEDAT
+]);
+echo '</form>';
+// =========== begin post error p tag =================
+echo '<p id="id-p-createposterr" class="cl-p-createposterr"></p>';
+// =========== end post error p tag==================
+// =========== end create post form ===================
+echo '</div>';
+// ==================== End hidden create post =============================

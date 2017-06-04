@@ -143,7 +143,6 @@ body{
 
 #id-ul-notilist li{
     list-style: none;
-    diaplay: inline-block;
     border-bottom: 2px solid #FFFFFF;
 }
 

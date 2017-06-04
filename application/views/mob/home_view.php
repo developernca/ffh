@@ -94,6 +94,9 @@ if (!is_null($post_list)) {
             echo sprintf('<span class="cl-span-postedby">%s</span>', $row[Constant::TABLE_ACCOUNTS_COLUMN_NAME]);
         }
         echo '<p class="cl-p-epcontent">' . $row[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] . '</p>';
+        if (!is_null($row[Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL])) {
+            $this->table->add_row('Contact Email', '<span class="cl-span-epcontactemail">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_EMAIL] . '</span>');
+        }
         if (!is_null($row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE])) {
             $this->table->add_row('Contact Phone', '<span class="cl-span-epcontactphone">' . $row[Constant::TABLE_POSTS_COLUMN_CONTACT_PHONE] . '</span>');
         }

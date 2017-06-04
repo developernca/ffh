@@ -10,7 +10,7 @@ var edit_container = null;
 var action = null; // base url
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-$(window).on("load", function () {
+$(window).on("load", function() {
     setPostUpdatedTime();
     navChange();
 });
@@ -25,22 +25,22 @@ function listenDiscussionChange(action) {
     var location = window.location["href"].split("index.php");
     if (location.length > 1 && location[1] !== "") {
         console.log("interval");
-        setInterval(function () {
+        setInterval(function() {
             $.get(
                     action + "index.php/discussionaccess/get_unseen"
                     , null
-                    , function (response) {
+                    , function(response) {
                         console.log(response);
+                        var info_bell_li = $("#id-ul-infoview").find("li"); // use to bind click event to bell icon
                         var resp_arr = JSON.parse(response);
                         if (resp_arr['flg']) {// data exist
                             var data = resp_arr['msg'];
                             var noticount = data.length;
-                            $("#id-span-noticount").text(noticount); // append number of notification beside the bell icon
-                            var info_bell_li = $("#id-ul-infoview").find("li"); // use to bind click event to bell icon
                             if ($("#id-ul-notilist").length < 1) {// first time and noti list not already exist
                                 console.log("NULL and generate");
+                                $("#id-span-noticount").text(noticount); // append number of notification beside the bell icon
                                 generateNotiList(data);
-                                $(info_bell_li[1]).on("click", function () {
+                                $(info_bell_li[1]).on("click", function() {
                                     if ($("#id-ul-notilist").is(":visible")) {
                                         $("#id-ul-notilist").hide(200);
                                     } else {
@@ -50,7 +50,7 @@ function listenDiscussionChange(action) {
                             } else {
                                 var li_list = $("#id-ul-notilist").find("li");
                                 if (noticount === li_list.length) {
-                                    // same li count, no new notification in other post but there may be changes in 
+                                    // same li count, no new notification in other post but there may be changes in
                                     // current posts so change the inner text of li
                                     for (var i = 0; i < li_list.length; i++) {
                                         (data[i]["dcount"] > 1) ?
@@ -58,10 +58,11 @@ function listenDiscussionChange(action) {
                                                 $(li_list[i]).find(".cl-p-dcount").text("There is " + data[i]["dcount"] + " new discussion in")
                                     }
                                 } else {// notification changed and the whole noti list must update (regenerate notilist);
+                                    $("#id-span-noticount").text(noticount); // append number of notification beside the bell icon
                                     $("#id-ul-notilist").remove();
                                     generateNotiList(data);
                                     $(info_bell_li[1]).off("click");
-                                    $(info_bell_li[1]).on("click", function () {
+                                    $(info_bell_li[1]).on("click", function() {
                                         if ($("#id-ul-notilist").is(":visible")) {
                                             $("#id-ul-notilist").hide(200);
                                         } else {
@@ -71,7 +72,8 @@ function listenDiscussionChange(action) {
                                 }
                             }
                         } else { // no data
-
+                            $("#id-ul-notilist").remove();
+                            $("#id-span-noticount").text(null);
                         }
                     });
         }
@@ -152,8 +154,8 @@ function setPostUpdatedTime() {
     var postedTimeSpan = $(".cl-span-posttime");
     var spanLength = postedTimeSpan.length;
     for (var i = 0; i < spanLength; i++) {
-        var time = new Date(parseInt($(postedTimeSpan[i]).text()));
-        $(postedTimeSpan[i]).text("last updated : " + time.toString()).show();
+        $(postedTimeSpan[i]).text("last updated : " + getFormattedTime($(postedTimeSpan[i]).text()));
+        $(postedTimeSpan[i]).show();
     }
 }
 
@@ -184,7 +186,7 @@ function signup(action) {
     $.post(
             signupAction,
             $("#id-form-signup").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
                     toggleAction();
@@ -212,7 +214,7 @@ function signin(action) {
     $.post(
             signinAction,
             $("#id-form-signin").serializeArray(),
-            function (response) {
+            function(response) {
                 toggleAction();
                 var resp_arr = JSON.parse(response);
                 if (resp_arr["flg"] !== 0) {
@@ -272,7 +274,7 @@ function sendActcode(action) {
     $.post(
             activateAction,
             $("#id-form-actvcode").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) {
                     var err_ptag = $("<p>");
@@ -296,7 +298,7 @@ function changeEmail(action) {
     $.post(
             action + "index.php/confirmation/change_email/",
             $("#id-form-remail").serializeArray(),
-            function (response) {
+            function(response) {
                 console.log(response);
                 var resp_arr = JSON.parse(response);
                 if (!resp_arr["flg"]) { // flag false, error
@@ -313,7 +315,7 @@ function changeEmail(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 }
@@ -332,7 +334,7 @@ function submitPost(action) {
     $.post(
             submitAction,
             $("#id-form-createpost").serializeArray(),
-            function (response) {
+            function(response) {
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -403,7 +405,7 @@ function submitPost(action) {
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly
                     $(container).fadeTo("slow", 0.5);
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $(container).stop().fadeTo("slow", 1);
                     }, 2000);
                 } else if (!resp_arr['flg'] && resp_arr.hasOwnProperty('msg')) { // validation error occured
@@ -479,7 +481,7 @@ function postDeleteClick(element, action) {
         $.post(
                 action + "index.php/mypost/delete/" + _id,
                 null,
-                function (response) {
+                function(response) {
                     console.log(response);
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) {
@@ -498,10 +500,12 @@ function postDeleteClick(element, action) {
 function submitEditPost(action) {
     var editAction = action + "index.php/mypost/edit";
     $("#id-hidden-updatedat").val(new Date().getTime());
+
     $.post(
             editAction,
             $("#id-form-editpost").serializeArray(),
-            function (response) {
+            function(response) {
+                console.log(response);
                 var resp_arr = JSON.parse(response);
                 if (resp_arr['flg'] && resp_arr.hasOwnProperty("action")) {// session time out
                     $(location).attr("href", action);
@@ -563,7 +567,7 @@ function editCancel() {
  */
 function showPostError(id, msg) {
     $(id).text("*** " + msg + "***").fadeIn();
-    setTimeout(function () {
+    setTimeout(function() {
         $(id).fadeOut();
     }, 3500);
 }
@@ -585,7 +589,7 @@ function showDiscussion(element, action) {
         $.post(
                 action + "index.php/discussionaccess/get/" + $(parent).find(".cl-span-epid").text(),
                 null,
-                function (response) {
+                function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                         var data = resp_arr["msg"];
@@ -632,7 +636,7 @@ function submitDiscussion(action, element) {
         $.post(
                 action + "index.php/discussionaccess/submit",
                 {"diss": discussion_text, "pid": post_id, "updated_at": new Date().getTime()},
-                function (response) {
+                function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
                         console.log(resp_arr);
@@ -665,14 +669,14 @@ function dissEditClick(element, action) {
     $(dissEditForm).find(".cl-textarea-discussion").val($(currentDiss).find(".cl-p-discussion").text());
     $(currentDiss).replaceWith($(dissEditForm));
     // submit click
-    $(dissEditForm).find(".cl-span-dissubmit").on("click", function () {
+    $(dissEditForm).find(".cl-span-dissubmit").on("click", function() {
         var discussion_text = $(dissEditForm).find(".cl-textarea-discussion").val();
         if (discussion_text !== "") {// work only if there is a text in discussion
             var diss_id = $(currentDiss).find(".cl-span-dissid").text();
             $.post(
                     action + "index.php/discussionaccess/edit",
                     {"discussion": discussion_text, "diss_id": diss_id, "updated_at": new Date().getTime()},
-                    function (response) {
+                    function(response) {
                         console.log(response);
                         var resp_arr = JSON.parse(response);
                         if (resp_arr["flg"] && resp_arr.hasOwnProperty("msg")) {
@@ -695,7 +699,7 @@ function dissEditClick(element, action) {
         }
     });
     // cancel click
-    $(dissEditForm).find(".cl-span-disscancel").on("click", function () {
+    $(dissEditForm).find(".cl-span-disscancel").on("click", function() {
         $(dissEditForm).replaceWith($(currentDiss));
         dissEditForm = null;
         currentDiss = null;
@@ -717,7 +721,7 @@ function dissDelClick(element, action) {
         $.post(
                 action + "index.php/discussionaccess/delete/" + did
                 , null
-                , function (response) {
+                , function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) { // delete success
                         $(parent).remove();

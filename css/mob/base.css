@@ -131,6 +131,79 @@ body{
     text-decoration: none;
 }
 
+/* Info view tags */
+
+#id-ul-infoview{
+    display: inline-block;
+    padding: 0px;
+}
+#id-ul-infoview li{
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px;
+    box-shadow: 2px 4px 10px 1px;
+    margin-right: 20px;
+    font-size: 3em;
+}
+
+/* Discussion notification list ul-li-p */
+#id-ul-notilist{
+    width:65%;
+    padding: 0px;
+    margin-left: 0px;
+    font-size: 2em;
+    background: lightgray;
+    box-shadow: 2px 4px 10px 1px;
+}
+
+
+#id-ul-notilist li{
+    list-style: none;
+    border-bottom: 2px solid #FFFFFF;
+}
+
+#id-ul-notilist li:hover{
+    cursor: pointer;
+    box-shadow: 2px 4px 10px 1px;
+}
+
+#id-span-noticount{
+    font-weight: bolder;
+    font-size: xx-large;
+    color: #FF0000;
+}
+
+.cl-p-noti{
+    text-align: left;
+    padding-left: 10px;
+    margin: 0px;
+}
+
+.cl-p-notititle{
+    font-weight: bolder;
+    font-size: xx-large;
+}
+
+/* Discussion change notification bell */
+#id-span-disschangebell{
+    font-size: xx-large;
+    margin-left: 20px;
+    color: #FFFFFF;
+}
+#id-span-disschangebell:hover{
+    cursor: pointer;
+}
+
+/* Discussion change noti list */
+#id-ul-dissnoti{
+    position: absolute;
+    z-index: 100;
+}
+
+#id-ul-dissnoti li{
+
+}
+
 /*cpcontainer - create post container*/
 #id-div-cpcontainer{
     display: block;
@@ -224,7 +297,7 @@ cl-select-large{
 
 .cl-p-eptitle{
     font-weight: bolder;
-    font-size: x-large;
+    font-size: xx-large;
 }
 
 .cl-btn-small{
@@ -262,12 +335,12 @@ cl-select-large{
 
 /* post update time span */
 .cl-span-posttime{
-    font-size: xx-small;
+    font-size: medium;
     display: none;
 }
 /* posted user */
 .cl-span-postedby{
-    font-size: xx-small;
+    font-size: medium;
     margin-left: 10px;
     font-weight: bolder;
 }
@@ -275,7 +348,7 @@ cl-select-large{
 .cl-span-showdiss{
     display: inline-block;
     font-size: xx-large;
-    margin-top: 10px;
+    margin-top: 60px;
     margin-bottom: 5px;
 }
 .cl-span-showdiss:hover{
@@ -301,6 +374,7 @@ cl-select-large{
 
 /*discussion textarea*/
 .cl-textarea-discussion{
+    font-size: 3.2em;
     resize: none;
     width: 80%;
 }
@@ -321,9 +395,10 @@ cl-select-large{
 /* Discussions */
 .cl-p-discussion{
     background: #FFFFFF;
-    font-size: smaller;
+    border-left: 3px solid lightgreen;
+    font-size: xx-large;
     margin-top: 5px;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     height: 100px;
     overflow: auto;
     padding-left: 5px;
@@ -358,5 +433,5 @@ cl-select-large{
 /* discussion info discussed user and time */
 .cl-span-dissinfo{
     font-size: x-small;
-    margin-left: 5px;
+    margin: 10px;
 }

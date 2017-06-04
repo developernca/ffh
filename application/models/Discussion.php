@@ -35,9 +35,9 @@ class Discussion extends CI_Model {
             $post_owner = $this->post->get_posteduser_by_postid($post_id);
             if ($post_owner === $this->posted_user) {
                 // Update seen status of current post of current user to TRUE(1)
-                $update_success = $this->db->update(Constant::TABLE_DISCUSSIONS, [
+                $this->db->update(Constant::TABLE_DISCUSSIONS, [
                     Constant::TABLE_DISCUSSION_COLUMN_SEEN => TRUE
-                    ], [
+                        ], [
                     Constant::TABLE_DISCUSSION_COLUMN_POST_ID => $post_id,
                     Constant::TABLE_DISCUSSION_COLUMN_SEEN => FALSE
                 ]);
@@ -56,10 +56,10 @@ class Discussion extends CI_Model {
         $this->db->join('accounts as a', 'a._id = p.account_id', 'inner');
         $this->db->group_by('p._id');
         $result = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [
-                'a._id' => $this->posted_user,
-                'discussions.discussed_by != ' => $this->posted_user,
-                'discussions.seen' => 0
-            ])->result_array();
+                    'a._id' => $this->posted_user,
+                    'discussions.discussed_by != ' => $this->posted_user,
+                    'discussions.seen' => 0
+                ])->result_array();
         if (!is_null($result) && !empty($result)) {
             return $result;
         } else {
@@ -68,7 +68,7 @@ class Discussion extends CI_Model {
     }
 
     /**
-     * 
+     *
      * @param string $pid post id
      * @return int
      */
@@ -169,7 +169,7 @@ class Discussion extends CI_Model {
         // get file path to delete content file
         $this->db->select(Constant::TABLE_DISCUSSION_COLUMN_FILENAME);
         $path = $this->db->get_where(Constant::TABLE_DISCUSSIONS, [
-                Constant::TABLE_DISCUSSION_COLUMN_ID => $id])->result_array();
+                    Constant::TABLE_DISCUSSION_COLUMN_ID => $id])->result_array();
         // delete table data
         $this->db->where(Constant::TABLE_DISCUSSION_COLUMN_ID, $id);
         $db_del_success = $this->db->delete(Constant::TABLE_DISCUSSIONS);

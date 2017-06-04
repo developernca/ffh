@@ -4,7 +4,7 @@
  * That's why file name is epv.js
  */
 var action = "";
-$(window).on("load", function () {
+$(window).on("load", function() {
     this.action = action;
     setDissInfo();
     gotoUnseen();
@@ -12,12 +12,29 @@ $(window).on("load", function () {
 });
 
 function listenThisPostDiscussion() {
-    setInterval(function () {
+    setInterval(function() {
         $.post(
                 action + "index.php/discussionaccess/currentpost_unseen_count/" + $(".cl-span-epid").text(),
                 null,
-                function (response) {
+                function(response) {
                     console.log(response);
+                    var resp_arr = JSON.parse(response);
+                    if (resp_arr["flg"]) {
+                        var count = resp_arr["msg"];
+                        var alert_text = "";
+                        if (count > 1) {
+                            alert_text = "There are " + count + " new discussions in this post. Click to refresh!";
+                        } else {
+                            alert_text = "There is 1 new discussion in this post. Click to refresh!";
+                        }
+                        var container = $("#id-p-eachalert");
+                        if ($(container).length === 0) {
+                            container = $("<p id='id-p-eachalert'>");
+                        }
+                        $(container).text(alert_text);
+                        $(container).insertAfter($(".cl-div-postcontainer")[0]);
+                    }
+
                 });
     }, 2000);
 }
@@ -43,10 +60,11 @@ function setDissInfo() {
     var temp_container = $(".cl-temp");
     var temp_length = $(temp_container).length;
     for (var i = 0; i < temp_length; i++) {
-        console.log($(temp_container[i]).text());
-        var info = $(info_container).text().concat(new Date(parseInt($(temp_container[i]).text())));
+        var info = $(info_container[i]).text();
+        info += getFormattedTime($(temp_container[i]).text());
         $(info_container).text(info);
         $(info_container).show();
         $(temp_container[i]).remove();
+        break;
     }
 }
