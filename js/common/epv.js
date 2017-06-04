@@ -13,8 +13,11 @@ $(window).on("load", function() {
 
 function listenThisPostDiscussion() {
     setInterval(function() {
+        // In normal case the id is text, in edit case the id is value of span
+        // @see common.js/postEditClick();
+        var id = $(".cl-span-epid").text() === "" ? $("input[type=hidden][name=pid]").val() : $(".cl-span-epid").text();
         $.post(
-                action + "index.php/discussionaccess/currentpost_unseen_count/" + $(".cl-span-epid").text(),
+                action + "index.php/discussionaccess/currentpost_unseen_count/" + id,
                 null,
                 function(response) {
                     console.log(response);
@@ -29,9 +32,14 @@ function listenThisPostDiscussion() {
                         }
                         var container = $("#id-p-eachalert");
                         if ($(container).length === 0) {
-                            container = $("<p id='id-p-eachalert'>");
+                            container = $("<p id='id-p-eachalert'></p>");
+                            $(container).append("<span>");
                         }
-                        $(container).text(alert_text);
+                        $(container).children().text(alert_text);
+                        $(container).children().css("cursor", "pointer");
+                        $(container).children().click(function() {
+                            location.reload();
+                        });
                         $(container).insertAfter($(".cl-div-postcontainer")[0]);
                     }
 

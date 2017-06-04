@@ -53,7 +53,7 @@ class DiscussionAccess extends MY_Controller {
 
     /**
      * Get discussion of user clicked post.
-     * 
+     *
      * @param string $post_id post id
      */
     public function get($post_id) {
@@ -94,7 +94,7 @@ class DiscussionAccess extends MY_Controller {
     /**
      * Get unseen discussions count of current post, which is
      * the post that is showing on each/post/{pid} page.
-     * 
+     *
      * @param string $pid post id
      */
     public function currentpost_unseen_count($pid) {

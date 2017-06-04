@@ -431,6 +431,10 @@ function postEditClick(element) {
     edit_container = $("#id-div-cpcontainer").clone();
     // replace and add all necessary data
     $(original_container).replaceWith($(edit_container));
+    // In each/post page the edit_container is hidden
+    if (!$(edit_container).is(":visible")) {
+        $(edit_container).show();
+    }
     $(edit_container).attr("id", "id-div-epcontainer");
     $(edit_container).find("#id-text-posttitle").val($(original_container).find(".cl-p-eptitle").text());
     $(edit_container).find("#id-textarea-postcontent").val($(original_container).find(".cl-p-epcontent").text());
@@ -724,7 +728,11 @@ function dissDelClick(element, action) {
                 , function(response) {
                     var resp_arr = JSON.parse(response);
                     if (resp_arr["flg"]) { // delete success
+                        var each_diss_parent = $(parent).parent(); // for each/post discussions delet
                         $(parent).remove();
+                        if ($(each_diss_parent).children().length === 0) {
+                            $(each_diss_parent).remove();
+                        }
                     } else { // delete failure
 
                     }
