@@ -36,7 +36,7 @@ echo form_input([
     'id' => 'id-btn-sif',
     'name' => Constant::NAME_BTN_SIGNIN_FORM,
     'onclick' => 'signin(\'' . base_url() . '\');']
-    , 'Sign In');
+        , 'Sign In');
 
 echo '</form>';
 
