@@ -12,6 +12,7 @@ class Constant {
     const HOME_VIEW = 'home_view';
     const MY_POST_VIEW = 'mypost_view';
     const EACH_POST_VIEW = 'each_post_view';
+    const GENERAL_VIEW = 'general_view';
     // ===== Session name constants =====
     const SESSION_USSID = 'sussid';
     const SESSION_EMAIL = 'email';
@@ -33,6 +34,10 @@ class Constant {
     const ERR_LONGER_ACTCODE = 'Activation code has to be excatly 6 characters';
     const ERR_ACTVCODE_MISMATCH = 'Activation code did not match';
     const ERR_ACTVCODE_UPDATE = 'Sorry, unexpected error occured during activation process. Try again or click resend link.';
+    const ERR_NAME_MINLENGTH = 'Name must be at least 3 chracters';
+    const ERR_NAME_MAXLENGTH = 'Name cannot be greater than 200 characters';
+    const ERR_NAME_BLANK = 'Account name cannot be empty';
+    const ERR_PASS_MISMATCH_OLD = 'Your current password is incorrect.';
     // ===== NAME ATTRIBUTE CONSTANTS FOR HTML TAG =====
     // name for input text field
     const NAME_TEXT_SIGNIN_FORM_EMAIL = 'sif_email';
@@ -44,18 +49,27 @@ class Constant {
     const NAME_TEXT_CONTACT_EMAIL = 'contact_email';
     const NAME_TEXT_CONTACT_PHONE = 'contact_phone';
     const NAME_TEXT_POST_REMARK = 'remark';
+    const NAME_TEXT_CURRENT_NAME = 'current_name';
+    const NAME_TEXT_CURRENT_EMAIL = 'current_email';
     // name for input password field
     const NAME_PASS_SIGNIN_FORM_PASSWORD = 'sif_pass';
     const NAME_PASS_SIGNUP_FORM_PASSWORD = 'suf_passs';
     const NAME_PASS_SIGNUP_FORM_REPASSWORD = 'suf_repass';
+    const NAME_PASS_CURRENT_PASSWORD = 'current_pass';
+    const NAME_PASS_NEW_PASSWORD = 'new_pass';
+    const NAME_PASS_NEW_REPASSWORD = 'new_repass';
     // name for input button field
     const NAME_BTN_SIGNIN_FORM = 'sif_btn';
     const NAME_BTN_SIGNUP_FORM = 'suf_btn';
+    // name for checkbox
+    const NAME_CHECKBOX_PASSCHANGE = 'pass_change_check';
     // name for hidden field
     const NAME_HIDDEN_SIGNUP_TIME = 'suf_usr_time';
     const NAME_HIDDEN_POST_CREATEDAT = 'pc_time';
     const NAME_HIDDEN_POST_UPDATEDAT = 'pc_time';
     const NAME_HIDDEN_POST_ID = 'pid';
+    // name for submit button
+    const NAME_SUBMIT_GENERAL_ACCOUNT = 'submit_acc';
     // name for select field
     const NAME_SELECT_POST_TYPE = 'type';
     // link param name
@@ -102,6 +116,9 @@ class Constant {
     const VDN_TOTAL_POSTS_COUNT = 'total_post_counts';
     const VDN_EACH_POST = 'each_post';
     const VDN_DISCUSSION_LIST_EACH = 'discussion_list';
+    const VDN_CURRENT_USRNAME = 'current_user_name';
+    const VDN_CURRENT_USREMAIL = 'current_user_email';
+    const VDN_ACCFORM_ERRMSG = 'accorm_errmsg';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array

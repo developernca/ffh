@@ -376,3 +376,16 @@ body{
     font-size: x-small;
     margin-left: 5px;
 }
+
+/* Genreal page */
+/* account form */
+#id-form-genralacc{
+    display: inline-block;
+    border: 2px solid #FFFFFF;
+    box-shadow: 6px 5px 10px;
+    border-radius: 10px;
+}
+
+#id-table-general{
+    font-size: large;
+}
