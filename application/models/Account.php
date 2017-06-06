@@ -2,16 +2,18 @@
 
 class Account extends CI_Model {
 
+    private $current_account_id;
     private $current_account_name;
 
     public function __construct() {
         parent::__construct();
-        $this->current_account_name = $this->session->userdata(Constant::SESSION_USSID);
+        $this->current_account_id = $this->session->userdata(Constant::SESSION_USSID);
+        $this->current_account_name = $this->session->userdata(Constant::SESSION_CURRENTUSER_NAME);
     }
 
     /**
-     * Save data to accounts table. 
-     * 
+     * Save data to accounts table.
+     *
      * @param type $data sign up form data
      * @return array return activation code and current inserted id if registration success, null otherwise
      */
@@ -49,7 +51,7 @@ class Account extends CI_Model {
 
     /**
      * Test whether email already exist.
-     * 
+     *
      * @param type $email sign up form email
      * @return boolean true if email exist, false otherwise
      */
@@ -63,7 +65,7 @@ class Account extends CI_Model {
     /**
      * Check whether current user activated his/her
      * account.
-     * 
+     *
      * @param type $cussid string current user session id
      * @param type $email string  current user email
      * @return boolean true if current account is activated, false otherwise
@@ -76,10 +78,10 @@ class Account extends CI_Model {
 
     /**
      * Activate current account, if id and code are correct.
-     * 
-     * @param string $id account id 
+     *
+     * @param string $id account id
      * @param string $code activation code
-     * @return mixed 
+     * @return mixed
      */
     public function activate_account($id, $email, $code) {
         $result = $this->db->update(Constant::TABLE_ACCOUNTS, [
@@ -114,7 +116,7 @@ class Account extends CI_Model {
 
     /**
      * Update account activation code by id.
-     * 
+     *
      * @param type $id id to search
      * @return mixed new activation code on success, NULL on failure
      */
@@ -122,7 +124,7 @@ class Account extends CI_Model {
         $activation_code = $this->generate_unique_actvcode();
         $update_success = $this->db->update(Constant::TABLE_ACCOUNTS, [
             Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code
-            ], [
+                ], [
             Constant::TABLE_ACCOUNTS_COLUMN_ID => $id
         ]);
         return $update_success ? $activation_code : NULL;
@@ -130,7 +132,7 @@ class Account extends CI_Model {
 
     /**
      * Update email and activation code of the current user.
-     * 
+     *
      * @param type $email email to update
      * @param type $acc_id account id
      * @return mixed return activation code or NULL on failure
@@ -143,14 +145,14 @@ class Account extends CI_Model {
             Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email,
             Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code,
             Constant::TABLE_ACCOUNTS_COLUMN_NAME => $splited_email[0]
-            ], [
+                ], [
             Constant::TABLE_ACCOUNTS_COLUMN_ID => $acc_id
         ]);
         return $update_success ? $activation_code : NULL;
     }
 
     /**
-     * 
+     *
      * @param String $id account id
      * @param Array $value data to update, form data
      * @return mixed true on success , false on failure, NULL on no change
@@ -162,7 +164,7 @@ class Account extends CI_Model {
             $this->db->set(Constant::TABLE_ACCOUNTS_COLUMN_NAME, $value[Constant::NAME_TEXT_CURRENT_NAME]);
             ++$updated_count;
         }
-        if (isset($value[Constant::NAME_CHECKBOX_PASSCHANGE])) {
+        if (isset($value[Constant::NAME_CHECKBOX_PASSCHANGE]) && !empty($value[Constant::NAME_CHECKBOX_PASSCHANGE])) {
             $this->db->set(Constant::TABLE_ACCOUNTS_COLUMN_PASSWORD, password_hash($value[Constant::NAME_PASS_NEW_PASSWORD], PASSWORD_DEFAULT));
             ++$updated_count;
         }
@@ -170,19 +172,23 @@ class Account extends CI_Model {
             return NULL;
         } else {
             $this->db->where(Constant::TABLE_ACCOUNTS_COLUMN_ID, $id);
-            return $this->db->update(Constant::TABLE_ACCOUNTS);
+            $update_success = $this->db->update(Constant::TABLE_ACCOUNTS);
+            if ($update_success) {
+                $this->session->set_userdata([Constant::SESSION_CURRENTUSER_NAME => $value[Constant::NAME_TEXT_CURRENT_NAME]]);
+            }
+            return $update_success;
         }
     }
 
     /**
      * Check whether current password is correct or not.
      * This function is used in case of account update.
-     * 
+     *
      * @param type $password current form password
      * @return mixed TRUE if password match, FALSE if password did not match, NULL on failure
      */
     public function is_current_password_match($password) {
-        $result = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ID => $this->current_account_name])->result_array();
+        $result = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ID => $this->current_account_id])->result_array();
         if (count($result) === 1) {
             return password_verify($password, $result[0][Constant::TABLE_ACCOUNTS_COLUMN_PASSWORD]);
         } else {
@@ -192,7 +198,7 @@ class Account extends CI_Model {
 
     /**
      * Get user data by email.
-     * 
+     *
      * @param type $email email to check
      * @param array $column columns to retrieve
      * @return array result set array
@@ -205,9 +211,9 @@ class Account extends CI_Model {
     }
 
     /**
-     * Generate unique activation code in case of register and 
+     * Generate unique activation code in case of register and
      * resending activation code.
-     * 
+     *
      * @return String unique activation code
      */
     private function generate_unique_actvcode() {

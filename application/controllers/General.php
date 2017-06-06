@@ -43,7 +43,8 @@ class General extends MY_Controller {
         if (isset($this->form_data[Constant::NAME_SUBMIT_GENERAL_ACCOUNT])) {
             $validation_errors = $this->accform_validate();
             if (is_null($validation_errors)) { // no validation errors
-                $this->account->update_account_by_id($this->current_usr_id, $this->form_data);
+                $update_success = $this->account->update_account_by_id($this->current_usr_id, $this->form_data);
+                (is_null($update_success)) ? redirect(base_url() . "index.php/general") : redirect(base_url() . "index.php/home/");
             } else { // validation errors occured
                 $this->load_view(Constant::GENERAL_VIEW, [
                     Constant::VDN_CURRENT_USRNAME => $this->form_data[Constant::NAME_TEXT_CURRENT_NAME],

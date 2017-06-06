@@ -27,14 +27,14 @@ $this->table->add_row(['Current name', form_input([
         'name' => Constant::NAME_TEXT_CURRENT_NAME,
         'class' => 'cl-text-medium',
         'value' => ${Constant::VDN_CURRENT_USRNAME},
-        'length' => '25'
+        'length' => '30'
 ])]);
 
 // ================= Email ========================
 $this->table->add_row(['Email', form_input([
         'name' => Constant::NAME_TEXT_CURRENT_EMAIL,
         'class' => 'cl-text-medium',
-        'length' => '25',
+        'length' => '30',
         'value' => ${Constant::VDN_CURRENT_USREMAIL},
         'disabled' => TRUE
 ])]);
@@ -46,7 +46,7 @@ $password_change_chbk = form_checkbox([
     'value' => 1,
     'checked' => FALSE,
     'style' => 'transform: scale(2.5);'
-    ]);
+        ]);
 
 $this->table->add_row([
     'colspan' => 2,
@@ -59,7 +59,7 @@ $this->table->add_row(['Current password', form_input([
         'type' => 'password',
         'name' => Constant::NAME_PASS_CURRENT_PASSWORD,
         'class' => 'cl-text-medium',
-        'length' => '25'
+        'length' => '30'
 ])]);
 
 // ============== New password ====================
@@ -67,7 +67,7 @@ $this->table->add_row(['New password', form_input([
         'type' => 'password',
         'name' => Constant::NAME_PASS_NEW_PASSWORD,
         'class' => 'cl-text-medium',
-        'length' => '25'
+        'length' => '30'
 ])]);
 
 // ============== New re password ==========================
@@ -75,7 +75,7 @@ $this->table->add_row(['Re-enter new password', form_input([
         'type' => 'password',
         'name' => Constant::NAME_PASS_NEW_REPASSWORD,
         'class' => 'cl-text-medium',
-        'length' => '25'
+        'length' => '30'
 ])]);
 
 // ============== Submit button =====================
@@ -84,7 +84,7 @@ $save_change_button = form_input([
     'class' => 'cl-btn-medium cl-common-hover',
     'name' => Constant::NAME_SUBMIT_GENERAL_ACCOUNT,
     'value' => 'Save'
-    ]);
+        ]);
 
 $this->table->add_row([
     'colspan' => 2,
