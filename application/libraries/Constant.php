@@ -27,7 +27,8 @@ class Constant {
     const ERR_SIGNUP_PASS_LENTH = 'Password must be at least 6 characters';
     const ERR_SIGNUP_PASS_MISMATCH = 'Password did not match';
     const ERR_EMAIL_BLANK = 'Email cannot be blank';
-    const ERR_EMAIL_EXCEED_LENGTH = 'Email cannot exceed 200 characters.';
+    const ERR_EMAIL_EXCEED_LENGTH = 'Email cannot exceed 200 characters';
+    const ERR_EMAIL_NOT_EXIST = 'This email address is not registered';
     const ERR_PASSWORD_BLANK = 'Password cannot be blank';
     const ERR_PASSWORD_LENGTH = 'Password must be greater than 5 characters';
     const ERR_BLANK_ACTCODE = 'Please enter activation code.';

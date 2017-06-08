@@ -36,12 +36,12 @@ echo form_input([
     'id' => 'id-btn-sif',
     'name' => Constant::NAME_BTN_SIGNIN_FORM,
     'onclick' => 'signin(\'' . base_url() . '\');']
-        , 'Sign In');
+    , 'Sign In');
 
 echo '</form>';
 
-echo anchor('#', Constant::TEXT_FORGET_PASSWORD_LINK, ["id" => "id-link-passforget"]);
-
+echo sprintf('<span id="id-span-passforget" class="cl-common-hover" onclick="%s">%s</span>', 'forgetPassClick(\'' . base_url() . '\');', Constant::TEXT_FORGET_PASSWORD_LINK);
+// anchor('#', Constant::TEXT_FORGET_PASSWORD_LINK, ["id" => "id-link-passforget"]);
 // ==================== Sign up form ====================
 
 echo '<form id="id-form-signup">';

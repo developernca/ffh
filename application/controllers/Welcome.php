@@ -94,7 +94,16 @@ class Welcome extends MY_Controller {
      * Function for password forget request.
      */
     public function forget() {
-        
+        // User can only reset password when the request is ajax and user is not already login yet
+        if ($this->input->is_ajax_request() && is_null($this->session->userdata(Constant::SESSION_USSID))) {
+            $validation_err_msg = $this->forget_validation();
+            if (!is_null($validation_err_msg)) {// error occured
+                exit(json_encode([
+                    'flg' => FALSE,
+                    'msg' => strip_tags($validation_err_msg)
+                ]));
+            }
+        }
     }
 
     /**
@@ -154,7 +163,19 @@ class Welcome extends MY_Controller {
             return Constant::ERR_PASSWORD_LENGTH;
         }
 
-        return null; // no errors
+        return NULL; // no errors
+    }
+
+    private function forget_validation() {
+        // validate email
+        $this->form_validation->set_rules(Constant::NAME_TEXT_PASSRESET_EMAIL, '', 'required|valid_email', ['required' => Constant::ERR_EMAIL_BLANK, 'valid_email' => Constant::ERR_EMAIL_FORMAT]);
+        if (!$this->form_validation->run()) {
+            return validation_errors();
+        }
+        if (!$this->account->is_email_exist($this->input->post(Constant::NAME_TEXT_SIGNUP_FORM_EMAIL))) {
+            return Constant::ERR_EMAIL_NOT_EXIST;
+        }
+        return NULL;
     }
 
 }
