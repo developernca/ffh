@@ -39,7 +39,6 @@ echo form_input([
     , 'Sign In');
 
 echo '</form>';
-
 echo sprintf('<span id="id-span-passforget" class="cl-common-hover" onclick="%s">%s</span>', 'forgetPassClick(\'' . base_url() . '\');', Constant::TEXT_FORGET_PASSWORD_LINK);
 // anchor('#', Constant::TEXT_FORGET_PASSWORD_LINK, ["id" => "id-link-passforget"]);
 // ==================== Sign up form ====================
@@ -92,3 +91,5 @@ echo form_input([
     'name' => Constant::NAME_HIDDEN_SIGNUP_TIME]);
 
 echo '</form>';
+
+echo '<h1 style="padding-bottom: 20px;color: green; font-weight: bold; font-style: italic; font-family: sans-serif;text-shadow: 2px 2px #FFFFFF;">Building better world by helping each other!</h1>';

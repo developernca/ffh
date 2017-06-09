@@ -7,7 +7,6 @@ class Confirmation extends MY_Controller {
     }
 
     /**
-     * @override
      * @return boolean true on authentication success, otherwise redirect
      */
     protected function authenticate() {
@@ -35,18 +34,21 @@ class Confirmation extends MY_Controller {
         $this->load_view(Constant::CONFIRMATION_VIEW, [Constant::VDN_SESSION_EMAIL => $this->session->userdata(Constant::SESSION_EMAIL)]);
     }
 
+    /**
+     * Account activation. Call when activate button click on page.
+     */
     public function activate() {
         $this->authenticate();
         $code = $this->input->post(Constant::NAME_TEXT_ACTIVATION_CODE);
         if (empty(trim($code))) {// return with error if code was blank
             exit(json_encode([
-                'flg' => FALSE
-                , 'msg' => Constant::ERR_BLANK_ACTCODE
+                'flg' => FALSE,
+                'msg' => Constant::ERR_BLANK_ACTCODE
             ]));
         } else if (strlen($code) != 6) {// return with error if code was longer than 6 or less than 6
             exit(json_encode([
-                'flg' => FALSE
-                , 'msg' => Constant::ERR_LONGER_ACTCODE
+                'flg' => FALSE,
+                'msg' => Constant::ERR_LONGER_ACTCODE
             ]));
         } else {// if no error
             // activate 

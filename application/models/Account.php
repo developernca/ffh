@@ -63,6 +63,26 @@ class Account extends CI_Model {
     }
 
     /**
+     * Update password by email in case of forgetting password.
+     * 
+     * @param type $email account email
+     * @return mixed new password on update success, otherwise false
+     */
+    public function update_password_by_email($email) {
+        $generated_password = KeyGenerator::getAlphaNumString(8); // generate 8 characters password
+        $hashed_password = password_hash($generated_password, PASSWORD_DEFAULT);
+        if ($hashed_password !== FALSE) {
+            $result = $this->db->update(Constant::TABLE_ACCOUNTS, [
+                Constant::TABLE_ACCOUNTS_COLUMN_PASSWORD => $hashed_password], [
+                Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email
+            ]);
+            return ($result) ? $generated_password : FALSE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
      * Check whether current user activated his/her
      * account.
      *
@@ -124,7 +144,7 @@ class Account extends CI_Model {
         $activation_code = $this->generate_unique_actvcode();
         $update_success = $this->db->update(Constant::TABLE_ACCOUNTS, [
             Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code
-                ], [
+            ], [
             Constant::TABLE_ACCOUNTS_COLUMN_ID => $id
         ]);
         return $update_success ? $activation_code : NULL;
@@ -145,7 +165,7 @@ class Account extends CI_Model {
             Constant::TABLE_ACCOUNTS_COLUMN_EMAIL => $email,
             Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code,
             Constant::TABLE_ACCOUNTS_COLUMN_NAME => $splited_email[0]
-                ], [
+            ], [
             Constant::TABLE_ACCOUNTS_COLUMN_ID => $acc_id
         ]);
         return $update_success ? $activation_code : NULL;

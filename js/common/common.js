@@ -239,7 +239,7 @@ function forgetPassClick(action) {
     var container = $("<div id='id-div-passforget'>");
     var title = $("<span id='id-span-passforgettitle'>Enter your email and an auto generated password will send to your mail.<span>");
     var form = $("<form id='id-form-forgetpass'/>");
-    var email_field = $("<input type='text' class='cl-text-medium' size='35'/>");
+    var email_field = $("<input type='text' class='cl-text-medium' name='email' size='35'/>");
     var submit_btn = $("<input type='button' class='cl-btn-medium' value='Submit'>");
     var cancel_btn = $("<input type='button' class='cl-btn-medium' value='Cancel' style='margin-left: 10px;'>");
     var error_text = $("<span class='cl-error-small'></span>");
@@ -258,7 +258,9 @@ function forgetPassClick(action) {
                     function (response) {
                         var resp_arr = JSON.parse(response);
                         if (resp_arr['flg']) {
-
+                            $("<p>" + resp_arr['msg'] + "</p>").insertBefore($("#id-span-passforget"));
+                            console.log(resp_arr);
+                            $(modal).remove();
                         } else {
                             $(error_text).text(resp_arr['msg']);
                         }
@@ -267,11 +269,11 @@ function forgetPassClick(action) {
     });
     $(container).append($(title));
     $(container).append("<br/>");
-    $(container).append($(email_field));
-    $(container).append("<br/>");
-    $(container).append($(submit_btn));
-    $(container).append($(cancel_btn));
-    $(container).append("<br/>");
+    $(form).append($(email_field));
+    $(form).append("<br/>");
+    $(form).append($(submit_btn));
+    $(form).append($(cancel_btn));
+    $(container).append($(form));
     $(container).append($(error_text));
     $(modal).append($(container));
     $("body").append($(modal));

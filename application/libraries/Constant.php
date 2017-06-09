@@ -135,5 +135,6 @@ class Constant {
     const ACTIVATION_MAIL_SUBJECT = 'Activation code for your ffh account';
     const ACTIVATION_MAIL_BODY = '<HTML><HEAD>Acivation code</HEAD><BODY><PRE>Thank you for creating FFH accounts. <BR>Recommend you to copy and paste the code. <BR>Some characters (I,l,1,0,O,D) are easy to wrong.<BR>Below is your activation code.<BR><BR>%s</PRE></BODY></HTML>';
     const HTML_MAIL_HEADER = 'Content-type: text/html; charset=iso-8859-1';
+    const PASSRESET_MAIL_BODY = '<HTML><HEAD>New password</HEAD><BODY><PRE>Dear user,<BR>Following is your new password. <BR>Now, you can login with this password. <BR> Since this is a system generated password, please, change it immidiately after logging in.<BR><BR><BR>%s</PRE></BODY></HTML>';
 
 }

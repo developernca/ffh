@@ -97,10 +97,28 @@ class Welcome extends MY_Controller {
         // User can only reset password when the request is ajax and user is not already login yet
         if ($this->input->is_ajax_request() && is_null($this->session->userdata(Constant::SESSION_USSID))) {
             $validation_err_msg = $this->forget_validation();
-            if (!is_null($validation_err_msg)) {// error occured
+            if (!is_null($validation_err_msg)) {// validation error occured
                 exit(json_encode([
                     'flg' => FALSE,
                     'msg' => strip_tags($validation_err_msg)
+                ]));
+            }
+            // no errors 
+            $email = $this->input->post('email');
+            $updated_password = $this->account->update_password_by_email($email);
+            if ($updated_password) {
+                // send mail with generated password to user
+                // $message = sprintf(Constant::PASSRESET_MAIL_BODY, $updated_password);
+                // mail($email, "New password", $message);
+                exit(json_encode([
+                    'flg' => TRUE,
+                    'msg' => 'A new password was sent to your email',
+                    'pass' => $updated_password
+                ]));
+            } else {
+                exit(json_encode([
+                    'flg' => FALSE,
+                    'msg' => 'Unexpected error occured. Try again!'
                 ]));
             }
         }
@@ -168,11 +186,11 @@ class Welcome extends MY_Controller {
 
     private function forget_validation() {
         // validate email
-        $this->form_validation->set_rules(Constant::NAME_TEXT_PASSRESET_EMAIL, '', 'required|valid_email', ['required' => Constant::ERR_EMAIL_BLANK, 'valid_email' => Constant::ERR_EMAIL_FORMAT]);
+        $this->form_validation->set_rules('email', '', 'required|valid_email', ['required' => Constant::ERR_EMAIL_BLANK, 'valid_email' => Constant::ERR_EMAIL_FORMAT]);
         if (!$this->form_validation->run()) {
             return validation_errors();
         }
-        if (!$this->account->is_email_exist($this->input->post(Constant::NAME_TEXT_SIGNUP_FORM_EMAIL))) {
+        if (!$this->account->is_email_exist($this->input->post('email'))) {
             return Constant::ERR_EMAIL_NOT_EXIST;
         }
         return NULL;
