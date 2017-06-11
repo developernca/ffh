@@ -28,7 +28,7 @@ class General extends MY_Controller {
     }
 
     public function index() {
-
+        $this->authenticate();
         $this->load_view(Constant::GENERAL_VIEW, [
             Constant::VDN_CURRENT_USRNAME => $this->current_usr_name,
             Constant::VDN_CURRENT_USREMAIL => $this->current_usr_email,

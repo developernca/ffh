@@ -100,7 +100,7 @@ class Post extends CI_Model {
 
     /**
      * Get post by posted user.
-     * 
+     *
      * @param String $id account_id of desired user
      * @param int $limit row limit for pagination
      * @param int $start pointer for start row
@@ -129,7 +129,7 @@ class Post extends CI_Model {
     /**
      * Get post by id. Since getting by id the result will be only one post.
      * So, there is no pagination.
-     * 
+     *
      * @param type $id post id to search
      * @return mixed return result set array or null
      */
@@ -146,8 +146,8 @@ class Post extends CI_Model {
 
     /**
      * Get posted user id by post id.
-     * 
-     * @param string $pid post id 
+     *
+     * @param string $pid post id
      * @return mixed return posted user id as string or NULL
      */
     public function get_posteduser_by_postid($pid) {
@@ -171,6 +171,56 @@ class Post extends CI_Model {
      */
     public function count_all_posts() {
         return $this->db->from(Constant::TABLE_POSTS)->count_all_results();
+    }
+
+    public function count_by_type($keys) {
+        // sort post type
+        $post_type = Constant::POST_TYPE_OPTIONS_ARR;
+        sort($post_type);
+        $key_type = $post_type[(int) $keys[Constant::NAME_SELECT_POST_TYPE]]; // user submitted post type
+        $this->db->from(Constant::TABLE_POSTS);
+        $this->db->where(Constant::TABLE_POSTS_COLUMN_TYPE, $key_type);
+        return $this->db->count_all_results();
+    }
+
+    /**
+     * Search post.
+     *
+     * @param type $keys keys to search
+     * @return mixed return result_rest if data match or null
+     */
+    public function search_post($keys) {
+        // sort post type
+        $post_type = Constant::POST_TYPE_OPTIONS_ARR;
+        sort($post_type);
+        $key_string = $keys[Constant::NAME_TEXT_SEARCH_KEY]; // user submitted search text
+        $key_type = $post_type[(int) $keys[Constant::NAME_SELECT_POST_TYPE]]; // user submitted post type
+        $this->db->join(Constant::TABLE_ACCOUNTS, "accounts._id = posts.account_id");
+        $this->db->select("accounts.name, posts.*");
+        $result = $this->db->get_where(Constant::TABLE_POSTS, [
+                    Constant::TABLE_POSTS_COLUMN_TYPE => $key_type,
+                    Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID . "!=" => $this->posted_user
+                ])->result_array();
+        if (is_null($result) || empty($result)) {
+            return NULL;
+        }
+        if (!empty($key_string)) {
+            foreach ($result as $key => $value) {
+                $file_content = file_get_contents($value[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]);
+                $match = strpos(strtolower($file_content), strtolower($key_string));
+                if ($match !== FALSE) {
+                    $result[$key][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br($file_content), 'url', TRUE);
+                } else {
+                    unset($result[$key]);
+                }
+            }
+        } else {
+            foreach ($result as $key => $value) {
+                $file_content = file_get_contents($value[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]);
+                $result[$key][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = $file_content;
+            }
+        }
+        return $result;
     }
 
     /**

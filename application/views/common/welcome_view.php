@@ -1,9 +1,10 @@
-<pre id="id-pre-desc">
-KJB is a bulletin-board system.
-Ask questions you want to know,
-Advertise items wanted or for sale,
-Post vacancy announcement and many other.
-</pre>
+<p id="id-p-desc">
+    If you are thinking "I need somebody to help me",
+    this is the right place for you. Whether you are
+    a programmer, engineer, researcher, artist or whatever,
+    post your need to see other people around the world
+    and you can get help or some suggestion.
+</p>
 <?php
 // ==================== Sign in form ====================
 
@@ -36,7 +37,7 @@ echo form_input([
     'id' => 'id-btn-sif',
     'name' => Constant::NAME_BTN_SIGNIN_FORM,
     'onclick' => 'signin(\'' . base_url() . '\');']
-    , 'Sign In');
+        , 'Sign In');
 
 echo '</form>';
 echo sprintf('<span id="id-span-passforget" class="cl-common-hover" onclick="%s">%s</span>', 'forgetPassClick(\'' . base_url() . '\');', Constant::TEXT_FORGET_PASSWORD_LINK);

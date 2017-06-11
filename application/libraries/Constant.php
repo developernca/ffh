@@ -13,13 +13,14 @@ class Constant {
     const MY_POST_VIEW = 'mypost_view';
     const EACH_POST_VIEW = 'each_post_view';
     const GENERAL_VIEW = 'general_view';
+    const SEARCH_VIEW = 'search_view';
     // ===== Session name constants =====
     const SESSION_USSID = 'sussid';
     const SESSION_EMAIL = 'email';
     const SESSION_CURRENTUSER_NAME = 'cu_name';
     // ===== AUTHANTICATION CODE =====
     const AUTH_ALREADY_LOGIN = 'alr_lgin'; // already logged in [authentication OK]
-    const AUTH_SESSION_NOT_EXIST = 'no_sess'; // session not exist 
+    const AUTH_SESSION_NOT_EXIST = 'no_sess'; // session not exist
     const AUTH_ACTIVATION_REQUIRED = 'act_req'; // activation require
     // ===== ERROR MESSAGES =====
     const ERR_EMAIL_FORMAT = 'Incorrect email format';
@@ -52,6 +53,7 @@ class Constant {
     const NAME_TEXT_POST_REMARK = 'remark';
     const NAME_TEXT_CURRENT_NAME = 'current_name';
     const NAME_TEXT_CURRENT_EMAIL = 'current_email';
+    const NAME_TEXT_SEARCH_KEY = 'search_key';
     // name for input password field
     const NAME_PASS_SIGNIN_FORM_PASSWORD = 'sif_pass';
     const NAME_PASS_SIGNUP_FORM_PASSWORD = 'suf_passs';
@@ -100,7 +102,7 @@ class Constant {
     const TABLE_POSTS_COLUMN_UPDATED_TIME = 'updated_time';
     const TABLE_POSTS_COLUMN_ACCOUNT_ID = 'account_id';
     // DISCUSSIONS TABLE
-    // 
+    //
     const TABLE_DISCUSSIONS = 'discussions';
     const TABLE_DISCUSSION_COLUMN_ID = '_id';
     const TABLE_DISCUSSION_COLUMN_FILENAME = 'filename';
@@ -120,14 +122,17 @@ class Constant {
     const VDN_CURRENT_USRNAME = 'current_user_name';
     const VDN_CURRENT_USREMAIL = 'current_user_email';
     const VDN_ACCFORM_ERRMSG = 'accorm_errmsg';
+    const VDN_IS_SEARCH = 'search';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array
     const POST_TYPE_OPTIONS_ARR = [
+        'Agriculturing',
         'IT_Computing',
         'Politic',
         'Business',
         'Other',
+        'Art',
         'Research',
         'Engineering'
     ];

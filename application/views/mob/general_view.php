@@ -1,7 +1,6 @@
 <?php
 
 echo form_open(base_url() . 'index.php/general/account/', ['id' => 'id-form-genralacc', 'method' => 'post']);
-
 // ============== Table template ====================
 $template = array(
     'table_open' => '<table id="id-table-general" border="0" cellpadding="15" cellspacing="0">',
