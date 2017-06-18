@@ -37,7 +37,9 @@
             } else {
                 $this->load->view('common/nav_view');
                 $this->load->view('common/info_view');
-                $this->load->view('common/searchform_view');
+                if ($view !== Constant::GENERAL_VIEW) {
+                    $this->load->view('common/searchform_view');
+                }
                 ($is_mobile) ? $this->load->view('mob/' . $view) : $this->load->view('web/' . $view);
             }
             ?>

@@ -12,7 +12,7 @@ const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "
 const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 $(window).on("load", function() {
     setPostUpdatedTime();
-    navChange();
+
 });
 /**
  * Listen discussion change from server.
@@ -121,28 +121,6 @@ function generateNotiList(data) {
     $(ul).css("top", (infoview_position.top + infoview_height) + "px");
     $(ul).css("left", infoview_position.left + "px");
     $(ul).hide();
-}
-
-/**
- * change current link to green color and black text
- * in navi ul-li
- *
- * @returns {void}
- */
-function navChange() {
-    var ul_elements = $("#id-ul-navlinkcontainer").children("li");
-    var ul_length = ul_elements.length;
-    var current_url = window.location.href;
-    for (var i = 0; i < ul_length; i++) {
-        var li = ul_elements[i];
-        var a_tag = $(li).find("a");
-        var url = a_tag.attr("href");
-        if (url === current_url) {
-            a_tag.css("color", "#000000");
-            $(li).css("background", "green");
-            break;
-        }
-    }
 }
 
 /**
@@ -451,7 +429,7 @@ function submitPost(action) {
                     // reset data in post create form
                     document.getElementById("id-form-createpost").reset();
                     // scroll to current posted div
-                    var container = $(".cl-div-postcontainer")[1];
+                    var container = $(".cl-div-postcontainer")[2];// 0 is search form, 1 is post form
                     var position = $(container).position();
                     window.scrollTo(0, position.top);
                     // show user to know the latest post signicantlly

@@ -119,3 +119,5 @@ if (!is_null($post_list)) {
     echo sprintf('<p class="cl-p-paginationlinks">%s</p>', ${Constant::VDN_PAGINATION_LINK});
 }
 // =========== end current users post list ================
+// =================== Total post count ===================
+echo sprintf('<p>Total %s posts.</p>', number_format(${Constant::VDN_TOTAL_POSTS_COUNT}));

@@ -53,6 +53,7 @@ class MyPost extends MY_Controller {
                 Constant::MY_POST_VIEW, [
             Constant::VDN_POST_TYPES_OPTIONS => $post_type,
             Constant::VDN_CURRENTUSER_POST_LISTS => $currentuser_post_list,
+            Constant::VDN_TOTAL_POSTS_COUNT => count($currentuser_post_list),
             Constant::VDN_PAGINATION_LINK => $this->pagination->create_links()
         ]);
     }
@@ -63,6 +64,9 @@ class MyPost extends MY_Controller {
      */
     public function submit() {
         $this->authenticate();
+        if (!$this->input->is_ajax_request()) {
+            redirect(base_url() + "index.php/home");
+        }
         $validation_err_msg = $this->validate_post();
         if (!is_null($validation_err_msg)) {// Errors
             exit(json_encode([
@@ -71,7 +75,6 @@ class MyPost extends MY_Controller {
             ]));
         }
         // get currently inserted post
-
         $inserted_post = $this->post->insert_post($this->input->post());
         if (!is_null($inserted_post)) {
             exit(json_encode([
@@ -87,12 +90,14 @@ class MyPost extends MY_Controller {
     }
 
     /**
-     * When user edit a post, validate post and if there is no input error, update in database,
-     * otherwise show error to user.
-     *
+     * When user edit a post, validate post and if there is no input error,
+     * update in database, otherwise show error to user.
      */
     public function edit() {
         $this->authenticate();
+        if (!$this->input->is_ajax_request()) {
+            redirect(base_url() + "index.php/home");
+        }
         $validation_err_msg = $this->validate_post();
         if (!is_null($validation_err_msg)) {// Errors
             exit(json_encode([

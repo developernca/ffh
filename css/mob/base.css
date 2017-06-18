@@ -133,6 +133,7 @@ body{
 
 #id-div-navcontainer{
     display: inline-block;
+    display: none;
     text-align: center;
     width: 60%;
 }
@@ -152,6 +153,7 @@ body{
 }
 
 #id-ul-navlinkcontainer{
+    display: none;
     color: #FFFFFF;
     list-style: none;
     padding: 0px;

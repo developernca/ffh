@@ -82,6 +82,8 @@ class Home extends MY_Controller {
                     Constant::VDN_IS_SEARCH => TRUE,
                     Constant::VDN_POST_TYPES_OPTIONS => $post_type,
                     Constant::VDN_TOTAL_POSTS_COUNT => count($matched_post),
+                    Constant::VDN_SEARCHED_SELECT => $get_form_data[Constant::NAME_SELECT_POST_TYPE],
+                    Constant::VDN_SEARCHED_KEY => $get_form_data[Constant::NAME_TEXT_SEARCH_KEY],
                     Constant::VDN_PAGINATION_LINK => $this->pagination->create_links()
                 ]);
             } else {
@@ -89,6 +91,8 @@ class Home extends MY_Controller {
                     Constant::VDN_ALL_POSTS => NULL,
                     Constant::VDN_IS_SEARCH => TRUE,
                     Constant::VDN_TOTAL_POSTS_COUNT => 0,
+                    Constant::VDN_SEARCHED_SELECT => $get_form_data[Constant::NAME_SELECT_POST_TYPE],
+                    Constant::VDN_SEARCHED_KEY => $get_form_data[Constant::NAME_TEXT_SEARCH_KEY],
                     Constant::VDN_POST_TYPES_OPTIONS => $post_type
                 ]);
             }
@@ -99,10 +103,13 @@ class Home extends MY_Controller {
             $this->pagination->initialize($config);
             $offset = $this->uri->segment(3);
             $this->load_view(Constant::HOME_VIEW, [
-                Constant::VDN_ALL_POSTS => array_slice($post_data, $offset, 10),
+                Constant::VDN_ALL_POSTS
+                => array_slice($post_data, $offset, 10),
                 Constant::VDN_IS_SEARCH => TRUE,
                 Constant::VDN_POST_TYPES_OPTIONS => $post_type,
                 Constant::VDN_TOTAL_POSTS_COUNT => count($post_type),
+                Constant::VDN_SEARCHED_SELECT => $get_form_data[Constant::NAME_SELECT_POST_TYPE],
+                Constant::VDN_SEARCHED_KEY => $get_form_data[Constant::NAME_TEXT_SEARCH_KEY],
                 Constant::VDN_PAGINATION_LINK => $this->pagination->create_links()
             ]);
         }

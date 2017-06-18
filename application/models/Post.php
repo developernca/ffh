@@ -207,6 +207,11 @@ class Post extends CI_Model {
         if (!empty($key_string)) {
             foreach ($result as $key => $value) {
                 $file_content = file_get_contents($value[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]);
+                $title_match = ($value[Constant::TABLE_POSTS_COLUMN_POST_TITLE] === $key_string);
+                if ($title_match) { // post will be shown even only if title match.
+                    $result[$key][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br($file_content), 'url', TRUE);
+                    continue;
+                }
                 $match = strpos(strtolower($file_content), strtolower($key_string));
                 if ($match !== FALSE) {
                     $result[$key][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br($file_content), 'url', TRUE);

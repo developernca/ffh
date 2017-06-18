@@ -123,11 +123,12 @@ class Constant {
     const VDN_CURRENT_USREMAIL = 'current_user_email';
     const VDN_ACCFORM_ERRMSG = 'accorm_errmsg';
     const VDN_IS_SEARCH = 'search';
+    const VDN_SEARCHED_SELECT = 'searched_selected';
+    const VDN_SEARCHED_KEY = 'searched_key';
     // text
     const TEXT_FORGET_PASSWORD_LINK = 'Forgot password?';
     // Type options array
     const POST_TYPE_OPTIONS_ARR = [
-        'Agriculturing',
         'IT_Computing',
         'Politic',
         'Business',
