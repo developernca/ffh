@@ -125,6 +125,7 @@ if (!is_null($post_list) && !isset(${Constant::VDN_IS_SEARCH})) {
     echo sprintf('<p class="cl-p-paginationlinks">%s</p>', ${Constant::VDN_PAGINATION_LINK});
 }
 // =========== end current users post list ================
+// =========== begin post search list =====================
 else if (!is_null($post_list) && isset(${Constant::VDN_IS_SEARCH})) {
     // pagination links
     echo sprintf('<p class="cl-p-paginationlinks">%s</p>', ${Constant::VDN_PAGINATION_LINK});
@@ -172,5 +173,6 @@ else if (!is_null($post_list) && isset(${Constant::VDN_IS_SEARCH})) {
     // pagination links
     echo sprintf('<p class="cl-p-paginationlinks">%s</p>', ${Constant::VDN_PAGINATION_LINK});
 }
+// =========== end post search list =======================
 // =================== Total post count ===================
 echo sprintf('<p>Total %s posts.</p>', number_format(${Constant::VDN_TOTAL_POSTS_COUNT}));

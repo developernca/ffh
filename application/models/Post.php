@@ -198,16 +198,17 @@ class Post extends CI_Model {
         $this->db->join(Constant::TABLE_ACCOUNTS, "accounts._id = posts.account_id");
         $this->db->select("accounts.name, posts.*");
         $result = $this->db->get_where(Constant::TABLE_POSTS, [
-                    Constant::TABLE_POSTS_COLUMN_TYPE => $key_type,
-                    Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID . "!=" => $this->posted_user
-                ])->result_array();
+                Constant::TABLE_POSTS_COLUMN_TYPE => $key_type,
+                Constant::TABLE_POSTS_COLUMN_ACCOUNT_ID . "!=" => $this->posted_user
+            ])->result_array();
         if (is_null($result) || empty($result)) {
             return NULL;
         }
         if (!empty($key_string)) {
             foreach ($result as $key => $value) {
                 $file_content = file_get_contents($value[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]);
-                $title_match = ($value[Constant::TABLE_POSTS_COLUMN_POST_TITLE] === $key_string);
+                // regular expression math (LIKE %value%)
+                $title_match = preg_match('~[\s\S]*' . strtolower($key_string) . '[\s\S]*~', strtolower($value[Constant::TABLE_POSTS_COLUMN_POST_TITLE]));
                 if ($title_match) { // post will be shown even only if title match.
                     $result[$key][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br($file_content), 'url', TRUE);
                     continue;
@@ -222,7 +223,7 @@ class Post extends CI_Model {
         } else {
             foreach ($result as $key => $value) {
                 $file_content = file_get_contents($value[Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME]);
-                $result[$key][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = $file_content;
+                $result[$key][Constant::TABLE_POSTS_COLUMN_TEXT_FILENAME] = auto_link(nl2br($file_content));
             }
         }
         return $result;

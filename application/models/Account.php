@@ -25,11 +25,14 @@ class Account extends CI_Model {
             $query = $this->db->get_where(Constant::TABLE_ACCOUNTS, [Constant::TABLE_ACCOUNTS_COLUMN_ID => $usr_id]);
             $result = $query->result();
         } while (!empty($result));
-        mkdir(FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $usr_id);
-
+        // create current user folder
+        $user_dir = FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR; // users base directory
+        $current_user_dir = $user_dir . $usr_id; // current user directory
+        mkdir($current_user_dir);
+        // copy .htaccess file from usr folder to prevent directory access of specific user folder
+        copy($user_dir . DIRECTORY_SEPARATOR . '.htaccess', $current_user_dir . DIRECTORY_SEPARATOR . '.htaccess');
         // generate activation code
         $activation_code = $this->generate_unique_actvcode();
-
         $hashed_password = password_hash($data[Constant::NAME_PASS_SIGNUP_FORM_PASSWORD], PASSWORD_DEFAULT);
         $usr_name = explode('@', $data[Constant::NAME_TEXT_SIGNUP_FORM_EMAIL]);
         $values = [
@@ -43,7 +46,7 @@ class Account extends CI_Model {
             , Constant::TABLE_ACCOUNTS_COLUMN_ACTIVATION_CODE => $activation_code];
         $insert_success = $this->db->insert(Constant::TABLE_ACCOUNTS, $values);
         if ($insert_success) {
-            return ['activation_code' => $activation_code, 'id' => $usr_id, 'name' => $usr_name];
+            return ['activation_code' => $activation_code, 'id' => $usr_id, 'name' => $usr_name[0]];
         } else {
             return null;
         }

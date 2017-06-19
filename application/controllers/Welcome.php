@@ -44,13 +44,13 @@ class Welcome extends MY_Controller {
         $validation_err_msg = $this->signup_validation();
         if (is_null($validation_err_msg) && !is_null($result = $this->account->register($this->input->post()))) {
             // set session data
-            $email = $this->input->post(Constant::NAME_TEXT_SIGNUP_FORM_EMAIL);
+             $email = $this->input->post(Constant::NAME_TEXT_SIGNUP_FORM_EMAIL);
             $this->session->set_userdata([
                 Constant::SESSION_USSID => $result['id']
                 , Constant::SESSION_EMAIL => $email
                 , Constant::SESSION_CURRENTUSER_NAME => $result['name']
             ]);
-            $this->send_activation_mail($email, $result['activation_code']);
+            // $this->send_activation_mail($email, $result['activation_code']);
             exit(json_encode([
                 'flg' => 0
             ]));
