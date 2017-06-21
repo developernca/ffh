@@ -32,7 +32,7 @@ class DiscussionAccess extends MY_Controller {
             return;
         }
     }
-
+    
     /**
      * Submit/post/insert discussion.
      */

@@ -9,7 +9,6 @@ class Home extends MY_Controller {
         $this->current_user_base_path = FCPATH . DIRECTORY_SEPARATOR . 'usr' . DIRECTORY_SEPARATOR . $this->session->userdata(Constant::SESSION_USSID) . DIRECTORY_SEPARATOR; // ffh/usr/{usr_id}/
     }
 
-    // @override
     protected function authenticate() {
         $authentication_flag = parent::authenticate();
         if ($authentication_flag === Constant::AUTH_ACTIVATION_REQUIRED) {

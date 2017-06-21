@@ -9,7 +9,7 @@ class Each extends MY_Controller {
         parent::__construct(['date', 'html', 'form', 'file'], ['form_validation', 'constant', 'session', 'keygenerator', 'table', 'pagination'], ['account', 'post', 'discussion']);
     }
 
-    public function authenticate() {
+    protected function authenticate() {
         $authentication_flag = parent::authenticate();
         if ($authentication_flag === Constant::AUTH_ACTIVATION_REQUIRED) {
             ($this->input->is_ajax_request()) ?

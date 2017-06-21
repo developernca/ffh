@@ -8,11 +8,7 @@ class Welcome extends MY_Controller {
     public function __construct() {
         parent::__construct(['html', 'form'], ['form_validation', 'keygenerator', 'session'], ['account']);
     }
-
-    /**
-     * @override
-     * @return
-     */
+    
     protected function authenticate() {
         $authentication_flag = parent::authenticate();
         if ($authentication_flag == Constant::AUTH_SESSION_NOT_EXIST) {

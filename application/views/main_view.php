@@ -7,6 +7,7 @@
 <html>
     <head>
         <?php
+        echo js_tag(base_url() . "js/common/jquery-3.2.1.min.js");
         echo js_tag('https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js');
         echo js_tag(base_url() . 'js/common/common.js');
         if ($view === Constant::EACH_POST_VIEW) {

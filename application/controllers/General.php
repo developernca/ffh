@@ -14,7 +14,7 @@ class General extends MY_Controller {
         $this->current_usr_id = $this->session->userdata(Constant::SESSION_USSID);
     }
 
-    public function authenticate() {
+    protected function authenticate() {
         $authentication_flag = parent::authenticate();
         if ($authentication_flag === Constant::AUTH_ACTIVATION_REQUIRED) {
             redirect(base_url() . 'index.php/confirmation');
